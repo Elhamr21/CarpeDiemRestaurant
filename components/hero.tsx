@@ -22,7 +22,6 @@ export function Hero() {
           muted
           loop
           playsInline
-          poster="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf1-3zWUz1BroiL5eZjscmUDNpTVVqVyL5.jpeg"
           className="absolute inset-0 w-full h-full object-cover"
         >
           <source
