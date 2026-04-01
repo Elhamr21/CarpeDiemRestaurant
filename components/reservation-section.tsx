@@ -5,13 +5,13 @@ import { MapPin, Phone, Clock, Mail, Check, Users, Calendar, MessageSquare } fro
 import { cn } from "@/lib/utils"
 
 const openingHours = [
-  { day: "Montag", hours: "Ruhetag", closed: true },
+  { day: "Montag", hours: "12:00 - 23:00" },
   { day: "Dienstag", hours: "Ruhetag", closed: true },
-  { day: "Mittwoch", hours: "12:00 - 22:00" },
-  { day: "Donnerstag", hours: "12:00 - 22:00" },
-  { day: "Freitag", hours: "12:00 - 22:00" },
-  { day: "Samstag", hours: "12:00 - 22:00" },
-  { day: "Sonntag", hours: "12:00 - 22:00" },
+  { day: "Mittwoch", hours: "12:00 - 23:00" },
+  { day: "Donnerstag", hours: "12:00 - 23:00" },
+  { day: "Freitag", hours: "12:00 - 23:00" },
+  { day: "Samstag", hours: "12:00 - 23:00" },
+  { day: "Sonntag", hours: "12:00 - 23:00" },
 ]
 
 const timeSlots = [

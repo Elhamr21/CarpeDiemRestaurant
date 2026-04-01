@@ -72,8 +72,8 @@ export function Footer() {
               <li className="flex items-start gap-3">
                 <Clock className="w-5 h-5 text-terracotta shrink-0 mt-0.5" />
                 <span className="text-cream/70 text-sm">
-                  Mi - So: 12 - 22 Uhr<br />
-                  Mo & Di: Ruhetag
+                  Mi - So: 12 - 23 Uhr<br />
+                  Di: Ruhetag
                 </span>
               </li>
             </ul>
