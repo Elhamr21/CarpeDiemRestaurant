@@ -40,32 +40,32 @@ export function Hero() {
           }`}
         >
           {/* Tagline */}
-          <p className="font-sans text-sm uppercase tracking-[0.4em] text-cream/80 mb-4">
+          <p className="font-sans text-xs sm:text-sm uppercase tracking-[0.3em] sm:tracking-[0.4em] text-cream/80 mb-2 sm:mb-4">
             Seit 1990 in Berlin-Lichterfelde
           </p>
 
           {/* Main Title */}
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-semibold text-cream mb-2 italic">
+          <h1 className="font-serif text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-semibold text-cream mb-1 sm:mb-2 italic">
             Carpe Diem
           </h1>
-          <p className="font-serif text-xl md:text-2xl text-cream/90 mb-8">
+          <p className="font-serif text-base sm:text-xl md:text-2xl text-cream/90 mb-4 sm:mb-8">
             Pizzeria & Ristorante Italiano
           </p>
 
           {/* Description */}
-          <p className="max-w-2xl mx-auto font-sans text-cream/80 text-lg leading-relaxed mb-12">
+          <p className="max-w-2xl mx-auto font-sans text-cream/80 text-sm sm:text-base md:text-lg leading-relaxed mb-6 sm:mb-12">
             Erleben Sie authentische italienische Küche mit hausgemachter Pasta,
             traditioneller Pizza aus dem Steinofen und erlesenen Weinen
             aus den besten Regionen Italiens.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-16 w-full px-2 sm:px-0">
             <a
               href="https://www.quandoo.de/de/restaurant/carpe-diem-berlin-lichterfelde-3708"
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-terracotta text-cream px-10 py-4 font-sans uppercase tracking-wider text-sm hover:bg-terracotta-dark transition-all duration-300 rounded-sm flex items-center gap-2"
+              className="group bg-terracotta text-cream px-6 sm:px-10 py-3 sm:py-4 font-sans uppercase tracking-wider text-xs sm:text-sm hover:bg-terracotta-dark transition-all duration-300 rounded-sm flex items-center gap-2 w-full sm:w-auto justify-center"
             >
               Tisch Reservieren
               <span className="group-hover:translate-x-1 transition-transform">
@@ -74,32 +74,32 @@ export function Hero() {
             </a>
             <a
               href="#menu"
-              className="border border-cream/40 text-cream px-10 py-4 font-sans uppercase tracking-wider text-sm hover:bg-cream/10 transition-all duration-300 rounded-sm"
+              className="border border-cream/40 text-cream px-6 sm:px-10 py-3 sm:py-4 font-sans uppercase tracking-wider text-xs sm:text-sm hover:bg-cream/10 transition-all duration-300 rounded-sm w-full sm:w-auto text-center"
             >
               Speisekarte Ansehen
             </a>
           </div>
 
           {/* Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-            <div className="flex items-center justify-center gap-3 bg-cream/10 backdrop-blur-sm px-6 py-4 rounded-sm">
-              <Star className="w-5 h-5 text-saffron" />
-              <div className="text-left">
-                <p className="text-cream font-sans text-sm">4.7 Sterne</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl mx-auto px-2 sm:px-0">
+            <div className="flex items-center gap-3 bg-cream/10 backdrop-blur-sm px-4 sm:px-6 py-3 sm:py-4 rounded-sm">
+              <Star className="w-5 h-5 text-saffron flex-shrink-0" />
+              <div className="text-left min-w-0">
+                <p className="text-cream font-sans text-xs sm:text-sm break-words">4.7 Sterne</p>
                 <p className="text-cream/60 text-xs">527 Bewertungen</p>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-3 bg-cream/10 backdrop-blur-sm px-6 py-4 rounded-sm">
-              <Clock className="w-5 h-5 text-sage" />
-              <div className="text-left">
-                <p className="text-cream font-sans text-sm">Mi - So: 12 - 22 Uhr</p>
+            <div className="flex items-center gap-3 bg-cream/10 backdrop-blur-sm px-4 sm:px-6 py-3 sm:py-4 rounded-sm">
+              <Clock className="w-5 h-5 text-sage flex-shrink-0" />
+              <div className="text-left min-w-0">
+                <p className="text-cream font-sans text-xs sm:text-sm break-words">Mi - So: 12 - 22</p>
                 <p className="text-cream/60 text-xs">Mo & Di Ruhetag</p>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-3 bg-cream/10 backdrop-blur-sm px-6 py-4 rounded-sm">
-              <MapPin className="w-5 h-5 text-terracotta" />
-              <div className="text-left">
-                <p className="text-cream font-sans text-sm">Lichterfelder Ring 129</p>
+            <div className="flex items-center gap-3 bg-cream/10 backdrop-blur-sm px-4 sm:px-6 py-3 sm:py-4 rounded-sm">
+              <MapPin className="w-5 h-5 text-terracotta flex-shrink-0" />
+              <div className="text-left min-w-0">
+                <p className="text-cream font-sans text-xs sm:text-sm break-words">Lichterfelder Ring</p>
                 <p className="text-cream/60 text-xs">12209 Berlin</p>
               </div>
             </div>
