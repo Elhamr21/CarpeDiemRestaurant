@@ -99,28 +99,44 @@ export function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-cream/10">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-            <p className="text-cream/50 text-xs">
-              &copy; {new Date().getFullYear()} Carpe Diem - Italienische Spezialitäten. Alle Rechte vorbehalten.
-            </p>
-            <div className="flex items-center gap-6">
-              <Link
-                href="#"
-                className="text-cream/50 hover:text-cream/70 text-xs transition-colors"
-              >
-                Impressum
-              </Link>
-              <Link
-                href="#"
-                className="text-cream/50 hover:text-cream/70 text-xs transition-colors"
-              >
-                Datenschutz
-              </Link>
-            </div>
-          </div>
-        </div>
+  <div className="container mx-auto px-4 py-6">
+    <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+      {/* Majtas */}
+      <p className="text-cream/50 text-xs">
+        &copy; {new Date().getFullYear()} Carpe Diem - Italienische Spezialitäten. Alle Rechte vorbehalten.
+      </p>
+
+      {/* Qendra: Developed By ClearLineTech */}
+      <p className="text-cream/50 text-xs md:text-center">
+        Developed By{' '}
+        <a
+          href="https://clearline-ai.tech/en"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-terracotta hover:text-terracotta-dark transition-colors"
+        >
+          ClearLineTech
+        </a>
+      </p>
+
+      {/* Djathtas */}
+      <div className="flex items-center gap-6">
+        <Link
+          href="#"
+          className="text-cream/50 hover:text-cream/70 text-xs transition-colors"
+        >
+          Impressum
+        </Link>
+        <Link
+          href="#"
+          className="text-cream/50 hover:text-cream/70 text-xs transition-colors"
+        >
+          Datenschutz
+        </Link>
       </div>
+    </div>
+  </div>
+</div>
     </footer>
   )
 }
