@@ -4,12 +4,12 @@ import Image from "next/image"
 
 const teamImages = [
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf6-J8GKJy5vgARBTC6ZlPP19zLRDlTDZC.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Unser Team in der Küche",
     caption: "Das Carpe Diem Team",
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf3-YAZq9E97kk3Kq6fVPENjAOmozwuvNJ.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Team am Eingang",
     caption: "Herzlich Willkommen",
   },
@@ -63,7 +63,7 @@ export function TeamSection() {
           <div className="relative">
             <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-2xl">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf4-Q4xNqgWtIzKJcfeFUEFSV43yg2cBVG.jpeg"
+                src="/photos/cesar.png"
                 alt="Gastfreundschaft im Carpe Diem"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -78,30 +78,40 @@ export function TeamSection() {
 
           {/* Content */}
           <div>
-            <h3 className="font-serif text-3xl md:text-4xl text-wine mb-6">
-              Unsere Geschichte
-            </h3>
-            <div className="space-y-4 text-muted-foreground leading-relaxed">
-              <p>
-                Das Carpe Diem wurde 1990 mit einer einfachen Vision gegründet:
-                authentische italienische Küche nach Berlin zu bringen. Was als
-                kleine Pizzeria begann, ist heute ein beliebter Treffpunkt für
-                Genießer aus ganz Berlin und darüber hinaus.
-              </p>
-              <p>
-                Unsere Rezepte stammen aus den verschiedenen Regionen Italiens
-                und werden von Generation zu Generation weitergegeben. Wir legen
-                größten Wert auf frische, hochwertige Zutaten und authentische
-                Zubereitungsmethoden.
-              </p>
-              <p>
-                Das Herzstück unseres Restaurants ist unser traditioneller
-                Steinofen, in dem unsere Pizzen bei perfekter Temperatur gebacken
-                werden. Dazu servieren wir erlesene Weine aus den besten
-                Anbaugebieten Italiens.
-              </p>
-            </div>
-          </div>
+  <h3 className="font-serif text-3xl md:text-4xl text-wine mb-6">
+    Unsere Geschichte
+  </h3>
+
+  <div className="space-y-4 text-muted-foreground leading-relaxed">
+    <p>
+      Das Carpe Diem wurde 1990 mit einer einfachen Vision gegründet:
+      authentische italienische Küche nach Berlin zu bringen. Was als
+      kleine Pizzeria begann, ist heute ein beliebter Treffpunkt für
+      Genießer aus ganz Berlin und darüber hinaus.
+    </p>
+
+    <p>
+      Ein wichtiger Teil dieser Geschichte ist Cesar, der seit vielen
+      Jahren das Herz und die Seele unseres Restaurants prägt. Mit seiner
+      Leidenschaft für italienische Küche und seinem Engagement hat er
+      dazu beigetragen, dass Carpe Diem zu dem geworden ist, was es heute ist.
+    </p>
+
+    <p>
+      Unsere Rezepte stammen aus den verschiedenen Regionen Italiens
+      und werden von Generation zu Generation weitergegeben. Wir legen
+      größten Wert auf frische, hochwertige Zutaten und authentische
+      Zubereitungsmethoden.
+    </p>
+
+    <p>
+      Das Herzstück unseres Restaurants ist unser traditioneller
+      Steinofen, in dem unsere Pizzen bei perfekter Temperatur gebacken
+      werden. Dazu servieren wir erlesene Weine aus den besten
+      Anbaugebieten Italiens.
+    </p>
+  </div>
+</div>
         </div>
       </div>
     </section>

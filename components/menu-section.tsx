@@ -27,7 +27,7 @@ const menuData = {
         nameIt: "Focaccia",
         price: "3,90",
         description: "Mit Olivenöl und Rosmarin",
-        image: "https://images.unsplash.com/photo-1619535860434-ba1d8fa12536?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "vitello-tonnato",
@@ -35,7 +35,7 @@ const menuData = {
         nameIt: "Vitello Tonnato",
         price: "14,50",
         description: "Dünn geschnittenes Kalbsfleisch mit Thunfischsauce und Kapern",
-        image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "carpaccio",
@@ -43,7 +43,7 @@ const menuData = {
         nameIt: "Carpaccio di Manzo",
         price: "14,50",
         description: "Hauchdünne Scheiben vom rohen Rinderfilet mit Parmesan und Rucola",
-        image: "https://images.unsplash.com/photo-1588013273468-315fd88ea34c?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "antipasto-carpe-diem",
@@ -51,7 +51,7 @@ const menuData = {
         nameIt: "Antipasto Carpe Diem",
         price: "14,50",
         description: "Nach Art des Hauses",
-        image: "https://images.unsplash.com/photo-1541014741259-de529411b96a?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "caprese",
@@ -59,7 +59,7 @@ const menuData = {
         nameIt: "Mozzarella Caprese",
         price: "13,50",
         description: "Büffelmozzarella mit Tomatenscheiben und frischem Basilikum",
-        image: "https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "frutti-di-mare",
@@ -67,7 +67,7 @@ const menuData = {
         nameIt: "Antipasto Frutti di Mare",
         price: "18,00",
         description: "Erlesener Meeresfrüchtesalat",
-        image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
     ]
   },
@@ -82,7 +82,7 @@ const menuData = {
         nameIt: "Margherita",
         price: "9,90",
         description: "Mit Tomatensauce und Mozzarella",
-        image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "salerno",
@@ -90,7 +90,7 @@ const menuData = {
         nameIt: "Salerno",
         price: "11,50",
         description: "Mit Tomatensauce, Mozzarella, Salami",
-        image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "parma",
@@ -98,7 +98,7 @@ const menuData = {
         nameIt: "Parma",
         price: "15,50",
         description: "Mit Parmaschinken, Rucola, Parmesan",
-        image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "roma",
@@ -106,7 +106,7 @@ const menuData = {
         nameIt: "Roma",
         price: "18,50",
         description: "Mit Scampi und Knoblauch",
-        image: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "carpe-diem-pizza",
@@ -114,7 +114,7 @@ const menuData = {
         nameIt: "Carpe Diem",
         price: "16,00",
         description: "Mit Parmaschinken und Feigen",
-        image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "elba",
@@ -122,7 +122,7 @@ const menuData = {
         nameIt: "Elba",
         price: "18,00",
         description: "Mit Meeresfrüchten",
-        image: "https://images.unsplash.com/photo-1520201163981-8cc95007dd2a?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
     ]
   },
@@ -137,7 +137,7 @@ const menuData = {
         nameIt: "Lasagne - hausgemacht",
         price: "14,90",
         description: "Schichtnudeln mit Hackragout, Tomaten-Bechamelsauce",
-        image: "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "spaghetti-pomodoro",
@@ -145,7 +145,7 @@ const menuData = {
         nameIt: "Spaghetti al Pomodoro",
         price: "10,90",
         description: "Mit Tomatensauce",
-        image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "aglio-olio",
@@ -153,7 +153,7 @@ const menuData = {
         nameIt: "Spaghetti Aglio & Olio",
         price: "11,90",
         description: "Mit Knoblauch, Olivenöl, Peperoncino",
-        image: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "tagliatelle-salmone",
@@ -161,7 +161,7 @@ const menuData = {
         nameIt: "Tagliatelle al Salmone",
         price: "16,50",
         description: "Mit Lachs in cremiger Currysauce",
-        image: "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "linguine-mare",
@@ -169,7 +169,7 @@ const menuData = {
         nameIt: "Linguine Mare",
         price: "18,00",
         description: "Mit Meeresfrüchten",
-        image: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "ravioli",
@@ -177,7 +177,7 @@ const menuData = {
         nameIt: "Ravioli Ricotta e Spinaci",
         price: "14,90",
         description: "Hausgemachte Ravioli mit Ricotta-Spinatfüllung",
-        image: "https://images.unsplash.com/photo-1587740908075-9e245070dfaa?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
     ]
   },
@@ -192,7 +192,7 @@ const menuData = {
         nameIt: "Scaloppine alla Milanese",
         price: "19,50",
         description: "Schweinemedaillons paniert mit Pommes und Gemüse",
-        image: "https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "filetto",
@@ -200,7 +200,7 @@ const menuData = {
         nameIt: "Filetto di Manzo alla Griglia",
         price: "31,50",
         description: "Frisches Arg. Rinderfilet (200g) vom Grill",
-        image: "https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "saltimbocca",
@@ -208,7 +208,7 @@ const menuData = {
         nameIt: "Saltimbocca alla Romana",
         price: "26,00",
         description: "Kalbsmedaillons mit Parmaschinken in Weißwein-Salbeisauce",
-        image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "salmone",
@@ -216,7 +216,7 @@ const menuData = {
         nameIt: "Salmone alla Griglia",
         price: "23,90",
         description: "Frischer Lachs vom Grill mit Gemüsebeilage",
-        image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "scampi",
@@ -224,7 +224,7 @@ const menuData = {
         nameIt: "Scampi alla Griglia",
         price: "29,50",
         description: "Fünf Großgarnelen vom Grill",
-        image: "https://images.unsplash.com/photo-1625943553852-781c6dd46faa?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "fegato",
@@ -232,7 +232,7 @@ const menuData = {
         nameIt: "Fegato Venezia",
         price: "19,90",
         description: "Frische Kalbsleber mit Butter und Salbei",
-        image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
     ]
   },
@@ -247,7 +247,7 @@ const menuData = {
         nameIt: "Tiramisu",
         price: "7,80",
         description: "Hausgemacht nach Originalrezept",
-        image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "panna-cotta",
@@ -255,7 +255,7 @@ const menuData = {
         nameIt: "Panna Cotta",
         price: "7,80",
         description: "Hausgemacht mit Beerensauce",
-        image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "gelato",
@@ -263,7 +263,7 @@ const menuData = {
         nameIt: "Gelato Misto",
         price: "6,40",
         description: "Gemischtes Eis",
-        image: "https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "cassata",
@@ -271,7 +271,7 @@ const menuData = {
         nameIt: "Cassata Siciliana",
         price: "7,50",
         description: "Eis mit kandierten Früchten",
-        image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "tartufo",
@@ -279,7 +279,7 @@ const menuData = {
         nameIt: "Tartufo Calabrese",
         price: "7,80",
         description: "Schokoladentrüffel-Eis",
-        image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
       {
         id: "creme-brulee",
@@ -287,7 +287,7 @@ const menuData = {
         nameIt: "Crème Brûlée",
         price: "6,90",
         description: "Klassisch karamellisiert",
-        image: "https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?w=400&h=300&fit=crop"
+        image: "https://images.unsplash.com/"
       },
     ]
   }

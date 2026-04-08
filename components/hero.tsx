@@ -49,7 +49,7 @@ export function Hero() {
             Carpe Diem
           </h1>
           <p className="font-serif text-base sm:text-xl md:text-2xl text-cream/90 mb-4 sm:mb-8">
-            Pizzeria & Ristorante Italiano
+             Ristorante Italiano
           </p>
 
           {/* Description */}

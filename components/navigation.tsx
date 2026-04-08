@@ -44,7 +44,7 @@ export function Navigation() {
             "text-xs uppercase tracking-[0.3em] font-sans font-medium transition-colors duration-300",
             isScrolled ? "text-wine/80" : "text-cream/80"
           )}>
-            Pizzeria
+            Enoteca
           </span>
           <span className={cn(
             "font-serif text-2xl md:text-3xl font-semibold italic tracking-wide transition-colors duration-300",

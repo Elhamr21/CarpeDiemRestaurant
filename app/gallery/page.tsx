@@ -7,61 +7,61 @@ import { X, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react"
 
 const galleryImages = [
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf1-3zWUz1BroiL5eZjscmUDNpTVVqVyL5.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Restaurant Eingang",
     title: "Willkommen im Carpe Diem",
     description: "Unser Eingang mit traditionellem italienischem Charme. Hier beginnt Ihr kulinarisches Erlebnis."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf2-limnKWwsj5Rv5gckItw0jTdHzoNrTY.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Team mit Zitrusfrüchten",
     title: "Frische Zutaten",
     description: "Mediterranes Ambiente mit frischen Zitrusfrüchten - ein Stück Italien mitten in Berlin."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf3-YAZq9E97kk3Kq6fVPENjAOmozwuvNJ.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Team am Eingang",
     title: "Herzlich Willkommen",
     description: "Unser Team begrüßt Sie herzlich und sorgt für einen unvergesslichen Abend."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf4-Q4xNqgWtIzKJcfeFUEFSV43yg2cBVG.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Gemütliche Atmosphäre",
     title: "Gastfreundschaft",
     description: "Bei uns fühlen Sie sich wie bei Freunden - herzliche italienische Gastfreundschaft."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf5-Olvs1G2fAvf0ssczprQm4RhChazZEJ.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Team Gruppenfoto",
     title: "Unser Team",
     description: "Mit Leidenschaft und Hingabe servieren wir Ihnen authentische italienische Küche."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf6-J8GKJy5vgARBTC6ZlPP19zLRDlTDZC.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Küchen Team",
     title: "Das Carpe Diem Team",
     description: "Unser engagiertes Team sorgt täglich für kulinarische Höhepunkte."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf7-iEV3XLITbCdpIek6EpJBSSqHi9A3sL.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Unser Koch",
     title: "Meisterhafte Küche",
     description: "Unsere Köche bereiten jeden Tag frische, authentische italienische Gerichte zu."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf8-E634yZv3c55spyV6ev5zTAYtev2diO.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/jpeg",
     alt: "Historisches Team Foto",
     title: "Tradition seit 1990",
     description: "Über drei Jahrzehnte italienische Gastlichkeit in Berlin-Lichterfelde."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf9-3OjMpUhOha28BKLDyoGoIXoGgXXblr.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "In der Küche",
     title: "Frisch aus der Küche",
     description: "Täglich frisch zubereitete Gerichte mit den besten Zutaten aus Italien."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ofert-4PktwKHtprDkqp7W0HtptVqsKMgw8b.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Tagesangebote Tafel",
     title: "Tagesangebote",
     description: "Unsere handgeschriebene Tafel zeigt täglich wechselnde Spezialitäten."
@@ -118,7 +118,7 @@ export default function GalleryPage() {
             
             <div className="text-center">
               <p className="text-xs uppercase tracking-[0.3em] text-terracotta">
-                Pizzeria
+                
               </p>
               <h1 className="font-serif text-2xl text-wine italic">
                 Carpe Diem

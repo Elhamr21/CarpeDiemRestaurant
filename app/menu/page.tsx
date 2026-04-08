@@ -185,7 +185,7 @@ export default function MenuPage() {
             
             <div className="text-center">
               <p className="text-xs uppercase tracking-[0.3em] text-terracotta">
-                Pizzeria
+                
               </p>
               <h1 className="font-serif text-2xl text-wine italic">
                 Carpe Diem

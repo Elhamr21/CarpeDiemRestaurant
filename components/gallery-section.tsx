@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react"
 // Only images NOT used elsewhere in the site
 const galleryImages = [
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf1-3zWUz1BroiL5eZjscmUDNpTVVqVyL5.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Restaurant Eingang",
     title: "Willkommen im Carpe Diem",
     description: "Unser Eingang mit traditionellem italienischem Charme"
@@ -19,13 +19,13 @@ const galleryImages = [
     description: "Mediterranes Ambiente mit frischen Zitrusfrüchten"
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf5-Olvs1G2fAvf0ssczprQm4RhChazZEJ.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Team Gruppenfoto",
     title: "Unser Team",
     description: "Familiäre Atmosphäre und herzliche Gastfreundschaft"
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf8-E634yZv3c55spyV6ev5zTAYtev2diO.jpeg",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Historisches Team Foto",
     title: "Tradition seit 1990",
     description: "Über 30 Jahre italienische Gastlichkeit"

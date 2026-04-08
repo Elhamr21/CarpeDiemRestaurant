@@ -18,12 +18,12 @@ const sourceSans = Source_Sans_3({
 })
 
 export const metadata: Metadata = {
-  title: 'Carpe Diem | Pizzeria & Ristorante Italiano',
+  title: 'Carpe Diem | Ristorante Italiano',
   description: 'Authentische italienische Küche in Berlin-Lichterfelde. Genießen Sie hausgemachte Pasta, traditionelle Pizza und erlesene Weine in warmherziger Atmosphäre.',
-  keywords: ['italienisches Restaurant Berlin', 'Pizzeria Lichterfelde', 'Carpe Diem', 'italienische Küche', 'Ristorante'],
+  keywords: ['italienisches Restaurant Berlin', ' Lichterfelde', 'Carpe Diem', 'italienische Küche', 'Ristorante'],
   authors: [{ name: 'Carpe Diem Ristorante' }],
   openGraph: {
-    title: 'Carpe Diem | Pizzeria & Ristorante Italiano',
+    title: 'Carpe Diem | Ristorante Italiano',
     description: 'Authentische italienische Küche in Berlin-Lichterfelde',
     locale: 'de_DE',
     type: 'website',

@@ -19,7 +19,7 @@ export function Footer() {
           <div>
             <div className="mb-6">
               <p className="text-xs uppercase tracking-[0.3em] text-cream/60 mb-1">
-                Pizzeria
+                
               </p>
               <h3 className="font-serif text-3xl italic">Carpe Diem</h3>
               <p className="text-xs uppercase tracking-[0.3em] text-cream/60 mt-1">
