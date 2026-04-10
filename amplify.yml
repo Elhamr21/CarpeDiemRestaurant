@@ -1,0 +1,44 @@
+version: 1
+backend:
+  phases:
+    build:
+      commands:
+        - corepack enable
+        - pnpm config set store-dir .pnpm-store
+        - pnpm install --frozen-lockfile --prefer-offline
+        - pnpm ampx pipeline-deploy --branch ${AWS_BRANCH} --app-id ${AWS_APP_ID}
+  artifacts:
+    baseDirectory: .
+    files:
+      - amplify_outputs.json
+  cache:
+    paths:
+      - amplify/.ampx
+      - amplify/node_modules
+      - node_modules/.cache/ampx
+      - .pnpm-store
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - corepack enable
+        - pnpm config set store-dir .pnpm-store
+        - pnpm install --frozen-lockfile
+        # Create .env.production with email config from Amplify environment variables
+        - |
+          cat > .env.production << EOF
+          RESEND_API_KEY=${RESEND_API_KEY}
+          EMAIL_FROM=${EMAIL_FROM:-carpdiem di Mare <reservierung@ristorante-carpdiemdimare.de>}
+          NOTIFICATION_TO=${NOTIFICATION_TO:-reservierung@ristorante-carpdiemdimare.de}
+          EOF
+    build:
+      commands:
+        - pnpm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - .pnpm-store
+      - .next/cache/**/*
