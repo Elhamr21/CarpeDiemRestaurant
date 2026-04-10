@@ -1,22 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-// Menu images from the original restaurant menus
-const menuImages = {
-  drinks: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/menu1-LhnpF67JfkHlZ1FXPdJHWO7c5KQlB0.png",
-  starters: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/menu2-hH4t76R7Qpgs5VDg595i9ts0to036z.png",
-  pizza: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/menu2-hH4t76R7Qpgs5VDg595i9ts0to036z.png",
-  pasta: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/menu2-hH4t76R7Qpgs5VDg595i9ts0to036z.png",
-  mains: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/menu3-bOPVCZtLKCniIQTu1ZNaMCTzZzkx5f.png",
-  desserts: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/menu3-bOPVCZtLKCniIQTu1ZNaMCTzZzkx5f.png",
-}
-
-const defaultImage = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf1-3zWUz1BroiL5eZjscmUDNpTVVqVyL5.jpeg"
 
 const menuCategories = [
   { id: "starters", label: "Vorspeisen", labelIt: "Antipasti" },
@@ -161,7 +148,6 @@ export default function MenuPage() {
   const [selectedItem, setSelectedItem] = useState<string | null>(null)
 
   const currentMenu = menuData[activeCategory as keyof typeof menuData]
-  const currentImage = menuImages[activeCategory as keyof typeof menuImages] || defaultImage
 
   // Find the active item for display purposes
   const activeItemId = hoveredItem || selectedItem
@@ -305,66 +291,40 @@ export default function MenuPage() {
             </div>
           </div>
 
-          {/* RIGHT SIDE - Image Preview */}
+          {/* RIGHT SIDE - Selected Dish Preview */}
           <div className="lg:sticky lg:top-[140px] lg:self-start">
-            {/* Mobile: Image appears above */}
-            <div className="hidden lg:block">
-              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl">
-                <Image
-                  src={currentImage}
-                  alt={`${currentMenu.title} Menü`}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-contain bg-cream transition-all duration-500"
-                  priority
-                />
-                
-                {/* Overlay with active item info */}
-                {activeItem && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-fig/90 via-fig/60 to-transparent p-8">
-                    <div className="text-cream">
-                      <p className="font-sans text-xs uppercase tracking-wider text-cream/70 mb-1">
-                        Ausgewählt
-                      </p>
-                      <h4 className="font-serif text-2xl mb-2">{activeItem.name}</h4>
-                      <p className="text-cream/80 text-sm mb-2">{activeItem.description}</p>
-                      <p className="font-serif text-xl text-saffron">{activeItem.price} &euro;</p>
-                    </div>
-                  </div>
-                )}
-                
-                {/* Default state - no item selected */}
-                {!activeItem && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-fig/70 to-transparent p-8">
-                    <div className="text-cream text-center">
-                      <p className="font-sans text-sm text-cream/70">
-                        Wählen Sie ein Gericht aus der Liste
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+            <div className="rounded-2xl bg-cream p-8 shadow-2xl">
+              <p className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta mb-3">
+                Auswahl
+              </p>
+              <h4 className="font-serif text-3xl text-wine mb-3">
+                {activeItem ? activeItem.name : currentMenu.title}
+              </h4>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                {activeItem
+                  ? activeItem.description
+                  : "Wählen Sie links ein Gericht aus, um die Details zu sehen."}
+              </p>
 
-            {/* Mobile: Swipeable gallery style */}
-            <div className="lg:hidden mb-8">
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-xl">
-                <Image
-                  src={currentImage}
-                  alt={`${currentMenu.title} Menü`}
-                  fill
-                  sizes="100vw"
-                  className="object-contain bg-cream"
-                  priority
-                />
-              </div>
-              {activeItem && (
-                <div className="mt-4 p-4 bg-wine text-cream rounded-xl">
-                  <h4 className="font-serif text-xl mb-1">{activeItem.name}</h4>
-                  <p className="text-cream/80 text-sm mb-2">{activeItem.description}</p>
-                  <p className="font-serif text-lg text-saffron">{activeItem.price} &euro;</p>
-                </div>
+              {activeItem ? (
+                <p className="font-serif text-2xl text-terracotta mb-8">
+                  {activeItem.price} &euro;
+                </p>
+              ) : (
+                <p className="font-serif text-lg italic text-terracotta mb-8">
+                  Bilder werden ergänzt.
+                </p>
               )}
+
+              <div className="rounded-xl border border-travertine bg-parchment p-6">
+                <p className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta mb-2">
+                  Hinweis
+                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Alle Preise verstehen sich in Euro inklusive MwSt. Allergene und
+                  Zusatzstoffe erhalten Sie auf Anfrage direkt im Restaurant.
+                </p>
+              </div>
             </div>
           </div>
         </div>

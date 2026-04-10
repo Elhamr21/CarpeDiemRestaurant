@@ -7,40 +7,10 @@ import { ArrowRight } from "lucide-react"
 // Only images NOT used elsewhere in the site
 const galleryImages = [
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Restaurant Eingang",
-    title: "Willkommen im Carpe Diem",
-    description: "Unser Eingang mit traditionellem italienischem Charme"
-  },
-  {
     src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf2-limnKWwsj5Rv5gckItw0jTdHzoNrTY.jpeg",
-    alt: "Team mit Zitrusfrüchten",
+    alt: "Frische Zutaten",
     title: "Frische Zutaten",
     description: "Mediterranes Ambiente mit frischen Zitrusfrüchten"
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Team Gruppenfoto",
-    title: "Unser Team",
-    description: "Familiäre Atmosphäre und herzliche Gastfreundschaft"
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Historisches Team Foto",
-    title: "Tradition seit 1990",
-    description: "Über 30 Jahre italienische Gastlichkeit"
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf9-3OjMpUhOha28BKLDyoGoIXoGgXXblr.jpeg",
-    alt: "In der Küche",
-    title: "Frisch aus der Küche",
-    description: "Täglich frisch zubereitete Gerichte"
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf7-iEV3XLITbCdpIek6EpJBSSqHi9A3sL.jpeg",
-    alt: "Unser Koch",
-    title: "Meisterhafte Küche",
-    description: "Authentische italienische Rezepte"
   },
 ]
 
@@ -57,14 +27,13 @@ export function GallerySection() {
             Galerie
           </h2>
           <p className="max-w-2xl mx-auto text-muted-foreground leading-relaxed">
-            Erleben Sie die Atmosphäre unseres Restaurants und lernen Sie unser
-            Team kennen.
+            Ein erster Eindruck unserer frischen Zutaten und der mediterranen
+            Atmosphäre im Carpe Diem.
           </p>
         </div>
 
-        {/* Gallery Preview Grid - Show first 4 images */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          {galleryImages.slice(0, 4).map((image, index) => (
+        <div className="mx-auto mb-12 max-w-md">
+          {galleryImages.map((image, index) => (
             <Link
               key={index}
               href="/gallery"
@@ -94,7 +63,7 @@ export function GallerySection() {
             href="/gallery"
             className="inline-flex items-center gap-2 bg-wine text-cream px-8 py-4 rounded-lg font-sans uppercase tracking-wider text-sm hover:bg-wine-dark transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Mehr Bilder ansehen
+            Galerie öffnen
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

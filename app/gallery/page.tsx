@@ -3,68 +3,14 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { X, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react"
+import { X, ArrowLeft } from "lucide-react"
 
 const galleryImages = [
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Restaurant Eingang",
-    title: "Willkommen im Carpe Diem",
-    description: "Unser Eingang mit traditionellem italienischem Charme. Hier beginnt Ihr kulinarisches Erlebnis."
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Team mit Zitrusfrüchten",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf2-limnKWwsj5Rv5gckItw0jTdHzoNrTY.jpeg",
+    alt: "Frische Zutaten",
     title: "Frische Zutaten",
     description: "Mediterranes Ambiente mit frischen Zitrusfrüchten - ein Stück Italien mitten in Berlin."
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Team am Eingang",
-    title: "Herzlich Willkommen",
-    description: "Unser Team begrüßt Sie herzlich und sorgt für einen unvergesslichen Abend."
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Gemütliche Atmosphäre",
-    title: "Gastfreundschaft",
-    description: "Bei uns fühlen Sie sich wie bei Freunden - herzliche italienische Gastfreundschaft."
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Team Gruppenfoto",
-    title: "Unser Team",
-    description: "Mit Leidenschaft und Hingabe servieren wir Ihnen authentische italienische Küche."
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Küchen Team",
-    title: "Das Carpe Diem Team",
-    description: "Unser engagiertes Team sorgt täglich für kulinarische Höhepunkte."
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Unser Koch",
-    title: "Meisterhafte Küche",
-    description: "Unsere Köche bereiten jeden Tag frische, authentische italienische Gerichte zu."
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/jpeg",
-    alt: "Historisches Team Foto",
-    title: "Tradition seit 1990",
-    description: "Über drei Jahrzehnte italienische Gastlichkeit in Berlin-Lichterfelde."
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "In der Küche",
-    title: "Frisch aus der Küche",
-    description: "Täglich frisch zubereitete Gerichte mit den besten Zutaten aus Italien."
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Tagesangebote Tafel",
-    title: "Tagesangebote",
-    description: "Unsere handgeschriebene Tafel zeigt täglich wechselnde Spezialitäten."
   },
 ]
 
@@ -74,27 +20,9 @@ export default function GalleryPage() {
   const openLightbox = (index: number) => setSelectedImage(index)
   const closeLightbox = () => setSelectedImage(null)
 
-  const goToPrevious = () => {
-    if (selectedImage !== null) {
-      setSelectedImage(
-        selectedImage === 0 ? galleryImages.length - 1 : selectedImage - 1
-      )
-    }
-  }
-
-  const goToNext = () => {
-    if (selectedImage !== null) {
-      setSelectedImage(
-        selectedImage === galleryImages.length - 1 ? 0 : selectedImage + 1
-      )
-    }
-  }
-
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (selectedImage === null) return
-    if (e.key === 'ArrowLeft') goToPrevious()
-    if (e.key === 'ArrowRight') goToNext()
     if (e.key === 'Escape') closeLightbox()
   }
 
@@ -149,8 +77,8 @@ export default function GalleryPage() {
             Galerie
           </h2>
           <p className="max-w-2xl mx-auto text-muted-foreground leading-relaxed">
-            Entdecken Sie die Atmosphäre unseres Restaurants, lernen Sie unser Team kennen 
-            und bekommen Sie einen Eindruck von unserer Leidenschaft für italienische Küche.
+            Ein konzentrierter Einblick in die frischen Zutaten und das mediterrane
+            Gefühl des Carpe Diem.
           </p>
         </div>
 
@@ -203,31 +131,6 @@ export default function GalleryPage() {
           >
             <X className="w-8 h-8" />
           </button>
-
-          {/* Previous Button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              goToPrevious()
-            }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-cream/80 hover:text-cream p-2 transition-colors z-10"
-            aria-label="Previous image"
-          >
-            <ChevronLeft className="w-10 h-10" />
-          </button>
-
-          {/* Next Button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              goToNext()
-            }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-cream/80 hover:text-cream p-2 transition-colors z-10"
-            aria-label="Next image"
-          >
-            <ChevronRight className="w-10 h-10" />
-          </button>
-
           {/* Image Container */}
           <div
             className="w-full max-w-5xl"
@@ -251,9 +154,6 @@ export default function GalleryPage() {
               </h3>
               <p className="text-cream/80 max-w-xl mx-auto">
                 {galleryImages[selectedImage].description}
-              </p>
-              <p className="text-sm text-cream/50 mt-4">
-                {selectedImage + 1} / {galleryImages.length}
               </p>
             </div>
           </div>
