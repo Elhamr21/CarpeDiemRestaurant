@@ -5,7 +5,7 @@ import { generateClient } from "aws-amplify/data"
 import type { Schema } from "@/amplify/data/resource"
 
 const DEFAULT_CONFIG_ERROR =
-  "Amplify ist noch nicht konfiguriert. Generieren Sie zuerst `amplify_outputs.json` mit `npx ampx sandbox` oder deployen Sie das Amplify-Backend."
+  "Amplify ist noch nicht konfiguriert. Generieren Sie zuerst `amplify_outputs.json` mit `pnpm run amplify:sandbox:once` oder deployen Sie das Amplify-Backend."
 
 let isConfigured = false
 let configurePromise: Promise<void> | null = null

@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "sandbox": "node ./node_modules/@aws-amplify/backend-cli/lib/ampx.js sandbox --outputs-out-dir .",
     "amplify:sandbox": "node ./node_modules/@aws-amplify/backend-cli/lib/ampx.js sandbox --outputs-out-dir .",
-    "amplify:sandbox:once": "node ./node_modules/@aws-amplify/backend-cli/lib/ampx.js sandbox --once --outputs-out-dir ."
+    "amplify:sandbox:once": "node ./node_modules/@aws-amplify/backend-cli/lib/ampx.js sandbox --once --outputs-out-dir .",
+    "amplify:generate-outputs": "node ./node_modules/@aws-amplify/backend-cli/lib/ampx.js generate outputs",
+    "amplify:help": "node ./node_modules/@aws-amplify/backend-cli/lib/ampx.js --help"
   },
   "dependencies": {
     "@aws-amplify/backend": "^1.20.0",

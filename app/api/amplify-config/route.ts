@@ -7,7 +7,7 @@ export const runtime = "nodejs"
 
 const OUTPUTS_FILE = path.join(process.cwd(), "amplify_outputs.json")
 const MISSING_OUTPUTS_ERROR =
-  "Die Datei `amplify_outputs.json` fehlt. Führen Sie `npx ampx sandbox` aus oder deployen Sie das Amplify-Backend, bevor Sie Reservierungen oder den Admin-Bereich verwenden."
+  "Die Datei `amplify_outputs.json` fehlt. Führen Sie `pnpm run amplify:sandbox:once` aus oder deployen Sie das Amplify-Backend, bevor Sie Reservierungen oder den Admin-Bereich verwenden."
 
 export async function GET() {
   try {

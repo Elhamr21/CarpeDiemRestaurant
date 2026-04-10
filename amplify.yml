@@ -6,7 +6,20 @@ backend:
         - corepack enable
         - pnpm config set store-dir .pnpm-store
         - pnpm install --frozen-lockfile --prefer-offline
-        - pnpm ampx pipeline-deploy --branch ${AWS_BRANCH} --app-id ${AWS_APP_ID}
+        - |
+          if pnpm exec node ./node_modules/@aws-amplify/backend-cli/lib/ampx.js pipeline-deploy \
+            --branch "${AWS_BRANCH}" \
+            --app-id "${AWS_APP_ID}" \
+            --outputs-out-dir .; then
+            echo "Amplify backend deployed for ${AWS_BRANCH}."
+          else
+            echo "Amplify backend deploy failed. Attempting to generate outputs from the existing backend for ${AWS_BRANCH}."
+            pnpm exec node ./node_modules/@aws-amplify/backend-cli/lib/ampx.js generate outputs \
+              --app-id "${AWS_APP_ID}" \
+              --branch "${AWS_BRANCH}" \
+              --format json \
+              --out-dir .
+          fi
   artifacts:
     baseDirectory: .
     files:
