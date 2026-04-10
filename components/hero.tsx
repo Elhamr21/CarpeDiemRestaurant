@@ -62,9 +62,7 @@ export function Hero() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-16 w-full px-2 sm:px-0">
             <a
-              href="https://www.quandoo.de/de/restaurant/carpe-diem-berlin-lichterfelde-3708"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#reservation"
               className="group bg-terracotta text-cream px-6 sm:px-10 py-3 sm:py-4 font-sans uppercase tracking-wider text-xs sm:text-sm hover:bg-terracotta-dark transition-all duration-300 rounded-sm flex items-center gap-2 w-full sm:w-auto justify-center"
             >
               Tisch Reservieren

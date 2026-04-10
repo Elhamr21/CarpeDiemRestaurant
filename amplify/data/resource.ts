@@ -13,7 +13,7 @@ const schema = a.schema({
       status: a.string().default('pending'),
     })
     .authorization((allow) => [
-      allow.guest().to(['create', 'read']),
+      allow.guest().to(['create']),
       allow.authenticated('identityPool'),
     ]),
 

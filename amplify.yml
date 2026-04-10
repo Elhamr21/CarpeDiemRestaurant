@@ -28,8 +28,8 @@ frontend:
         - |
           cat > .env.production << EOF
           RESEND_API_KEY=${RESEND_API_KEY}
-          EMAIL_FROM=${EMAIL_FROM:-carpdiem di Mare <reservierung@ristorante-carpdiemdimare.de>}
-          NOTIFICATION_TO=${NOTIFICATION_TO:-reservierung@ristorante-carpdiemdimare.de}
+          EMAIL_FROM=${EMAIL_FROM:-Carpe Diem <reservierung@carpe-diem.de>}
+          NOTIFICATION_TO=${NOTIFICATION_TO:-reservierung@carpe-diem.de}
           EOF
     build:
       commands:

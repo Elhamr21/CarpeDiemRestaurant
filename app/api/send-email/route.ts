@@ -1,23 +1,36 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend';
+import { NextRequest, NextResponse } from "next/server";
+import { Resend } from "resend";
 
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
-const EMAIL_FROM = process.env.EMAIL_FROM || 'reservierung@carp-diem.de';
-const NOTIFICATION_TO = process.env.NOTIFICATION_TO || 'reservierung@carp-diem.de';
+const EMAIL_FROM =
+  process.env.EMAIL_FROM || "Carpe Diem <reservierung@carpe-diem.de>";
+const NOTIFICATION_TO =
+  process.env.NOTIFICATION_TO || "reservierung@carpe-diem.de";
+const RESTAURANT_PHONE = "+49 30 711 36 44";
 
-// Lazy initialization to avoid build-time errors
 let resend: Resend | null = null;
+
 const getResend = () => {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is not configured.");
+  }
+
   if (!resend) {
     resend = new Resend(process.env.RESEND_API_KEY);
   }
+
   return resend;
 };
 
 type EmailRequest = {
-  type: 'reservation' | 'contact' | 'reservation_confirmation' | 'reservation_received' | 'contact_received';
+  type:
+    | "reservation"
+    | "contact"
+    | "reservation_confirmation"
+    | "reservation_received"
+    | "contact_received";
   payload: {
     name: string;
     email: string;
@@ -32,43 +45,56 @@ type EmailRequest = {
   };
 };
 
-const formatDateTime = (date?: string, time?: string) => {
-  if (!date) return '';
-  const dateObj = new Date(date);
-  const dateLabel = new Intl.DateTimeFormat('de-DE', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-    timeZone: 'Europe/Berlin',
-  }).format(dateObj);
-  return time ? `${dateLabel} um ${time} Uhr` : dateLabel;
+const formatTimeLabel = (time?: string) => {
+  if (!time) {
+    return "";
+  }
+
+  return /^\d{2}:\d{2}/.test(time) ? time.slice(0, 5) : time;
 };
 
-const buildReservationEmail = (payload: EmailRequest['payload']) => ({
+const formatDateTime = (date?: string, time?: string) => {
+  if (!date) {
+    return "";
+  }
+
+  const dateObject = new Date(date);
+  const dateLabel = new Intl.DateTimeFormat("de-DE", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    timeZone: "Europe/Berlin",
+  }).format(dateObject);
+
+  const timeLabel = formatTimeLabel(time);
+  return timeLabel ? `${dateLabel} um ${timeLabel} Uhr` : dateLabel;
+};
+
+const buildReservationEmail = (payload: EmailRequest["payload"]) => ({
   subject: `Neue Reservierung - ${payload.name}`,
   body: `
 Neue Reservierung eingegangen
 -----------------------------
 Name: ${payload.name}
 E-Mail: ${payload.email}
-Telefon: ${payload.phone || '-'}
+Telefon: ${payload.phone || "-"}
 Datum: ${formatDateTime(payload.date, payload.time)}
 Anzahl Gäste: ${payload.guests}
-Besondere Wünsche: ${payload.specialRequests || '-'}
+Besondere Wünsche: ${payload.specialRequests || "-"}
 
 Mit freundlichen Grüßen,
 Carpe Diem System
   `.trim(),
 });
 
-const buildContactEmail = (payload: EmailRequest['payload']) => ({
+const buildContactEmail = (payload: EmailRequest["payload"]) => ({
   subject: `Kontaktanfrage: ${payload.subject}`,
   body: `
 Kontaktformular Nachricht
 -------------------------
 Name: ${payload.name}
 E-Mail: ${payload.email}
-Telefon: ${payload.phone || '-'}
+Telefon: ${payload.phone || "-"}
 Betreff: ${payload.subject}
 
 Nachricht:
@@ -79,9 +105,14 @@ Carpe Diem System
   `.trim(),
 });
 
-const buildConfirmationEmail = (payload: EmailRequest['payload']) => {
-  const statusText = payload.status === 'confirmed' ? 'bestätigt' : 
-                     payload.status === 'cancelled' ? 'storniert' : 'aktualisiert';
+const buildConfirmationEmail = (payload: EmailRequest["payload"]) => {
+  const statusText =
+    payload.status === "confirmed"
+      ? "bestätigt"
+      : payload.status === "cancelled"
+        ? "storniert"
+        : "aktualisiert";
+
   return {
     subject: `Ihre Reservierung wurde ${statusText} - Carpe Diem`,
     body: `
@@ -93,14 +124,13 @@ Reservierungsdetails:
 ---------------------
 Datum: ${formatDateTime(payload.date, payload.time)}
 Anzahl Gäste: ${payload.guests}
-${payload.specialRequests ? `Besondere Wünsche: ${payload.specialRequests}` : ''}
+${payload.specialRequests ? `Besondere Wünsche: ${payload.specialRequests}` : ""}
 
-${payload.status === 'confirmed' 
-  ? 'Wir freuen uns, Sie bei uns zu begrüßen!' 
-  : payload.status === 'cancelled'
-  ? 'Falls Sie Fragen haben, kontaktieren Sie uns gerne.'
-  : ''
-}
+${payload.status === "confirmed"
+  ? "Wir freuen uns, Sie bei uns zu begrüßen!"
+  : payload.status === "cancelled"
+    ? "Falls Sie Fragen haben, kontaktieren Sie uns gerne."
+    : ""}
 
 Mit freundlichen Grüßen,
 Ihr Carpe Diem Team
@@ -108,8 +138,8 @@ Ihr Carpe Diem Team
   };
 };
 
-const buildReservationReceivedEmail = (payload: EmailRequest['payload']) => ({
-  subject: `Reservierungsanfrage erhalten - Carpe Diem`,
+const buildReservationReceivedEmail = (payload: EmailRequest["payload"]) => ({
+  subject: "Reservierungsanfrage erhalten - Carpe Diem",
   body: `
 Liebe/r ${payload.name},
 
@@ -119,21 +149,21 @@ Wir haben folgende Anfrage erhalten:
 ------------------------------------
 Datum: ${formatDateTime(payload.date, payload.time)}
 Anzahl Gäste: ${payload.guests}
-${payload.specialRequests ? `Besondere Wünsche: ${payload.specialRequests}` : ''}
+${payload.specialRequests ? `Besondere Wünsche: ${payload.specialRequests}` : ""}
 
 Wir werden Ihre Anfrage schnellstmöglich bearbeiten und uns bei Ihnen melden.
 
 Bei Fragen erreichen Sie uns unter:
-Telefon: +49 30 68406609
-E-Mail: reservierung@carp-diem.de
+Telefon: ${RESTAURANT_PHONE}
+E-Mail: ${NOTIFICATION_TO}
 
 Mit freundlichen Grüßen,
 Ihr Carpe Diem Team
   `.trim(),
 });
 
-const buildContactReceivedEmail = (payload: EmailRequest['payload']) => ({
-  subject: `Ihre Nachricht wurde empfangen - Carpe Diem`,
+const buildContactReceivedEmail = (payload: EmailRequest["payload"]) => ({
+  subject: "Ihre Nachricht wurde empfangen - Carpe Diem",
   body: `
 Liebe/r ${payload.name},
 
@@ -155,11 +185,14 @@ Ihr Carpe Diem Team
 
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    const body = await request.json() as EmailRequest;
+    const body = (await request.json()) as EmailRequest;
     const { type, payload } = body;
 
     if (!type || !payload) {
-      return NextResponse.json({ error: 'Missing type or payload' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing type or payload" },
+        { status: 400 },
+      );
     }
 
     let emailContent: { subject: string; body: string };
@@ -167,55 +200,63 @@ export async function POST(request: NextRequest): Promise<Response> {
     let replyTo: string | undefined;
 
     switch (type) {
-      case 'reservation':
+      case "reservation":
         emailContent = buildReservationEmail(payload);
         recipient = NOTIFICATION_TO;
         replyTo = payload.email;
         break;
-      case 'contact':
+      case "contact":
         emailContent = buildContactEmail(payload);
         recipient = NOTIFICATION_TO;
         replyTo = payload.email;
         break;
-      case 'reservation_confirmation':
+      case "reservation_confirmation":
         emailContent = buildConfirmationEmail(payload);
         recipient = payload.email;
         replyTo = NOTIFICATION_TO;
         break;
-      case 'reservation_received':
+      case "reservation_received":
         emailContent = buildReservationReceivedEmail(payload);
         recipient = payload.email;
         replyTo = NOTIFICATION_TO;
         break;
-      case 'contact_received':
+      case "contact_received":
         emailContent = buildContactReceivedEmail(payload);
         recipient = payload.email;
         replyTo = NOTIFICATION_TO;
         break;
       default:
-        return NextResponse.json({ error: `Unknown email type: ${type}` }, { status: 400 });
+        return NextResponse.json(
+          { error: `Unknown email type: ${type}` },
+          { status: 400 },
+        );
     }
 
     const { error } = await getResend().emails.send({
       from: EMAIL_FROM,
       to: recipient,
-      replyTo: replyTo,
+      replyTo,
       subject: emailContent.subject,
       text: emailContent.body,
     });
 
     if (error) {
-      console.error('Resend error:', error);
+      console.error("Resend error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    console.log(`Email sent: ${type} to ${recipient}`);
     return NextResponse.json({ success: true, type, recipient });
-  } catch (error) {
-    console.error('Email send error:', error);
+  } catch (sendError) {
+    console.error("Email send error:", sendError);
+
     return NextResponse.json(
-      { error: 'Failed to send email' },
-      { status: 500 }
+      {
+        error:
+          sendError instanceof Error
+            ? sendError.message
+            : "Failed to send email",
+      },
+      { status: 500 },
     );
   }
 }

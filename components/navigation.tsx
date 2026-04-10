@@ -93,9 +93,7 @@ export function Navigation() {
             <span className="font-sans text-sm">030 711 36 44</span>
           </a>
           <a
-            href="https://www.quandoo.de/de/restaurant/carpe-diem-berlin-lichterfelde-3708"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#reservation"
             className={cn(
               "px-6 py-2.5 font-sans text-sm uppercase tracking-wider transition-all duration-300 rounded-sm",
               isScrolled 
@@ -148,9 +146,7 @@ export function Navigation() {
               <span className="font-sans">030 711 36 44</span>
             </a>
             <a
-              href="https://www.quandoo.de/de/restaurant/carpe-diem-berlin-lichterfelde-3708"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#reservation"
               className="bg-wine text-cream px-8 py-3 font-sans uppercase tracking-wider hover:bg-wine-dark transition-all duration-300"
             >
               Tisch Reservieren

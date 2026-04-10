@@ -1,14 +1,10 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
-import "@/lib/amplify";
+import { useEffect, useMemo, useState } from "react";
 import { getCurrentUser, signOut } from "aws-amplify/auth";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -17,31 +13,57 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Trash2,
+  Calendar,
   CheckCircle,
-  XCircle,
-  LogOut,
   ChevronLeft,
   ChevronRight,
-  Calendar,
-  List,
-  X,
-  Phone,
-  Mail,
-  Users,
   Clock,
+  List,
+  LogOut,
+  Mail,
   MessageSquare,
+  Phone,
+  Trash2,
+  Users,
+  X,
+  XCircle,
 } from "lucide-react";
-
-const client = generateClient<Schema>();
+import {
+  ensureAmplifyConfigured,
+  getAmplifyErrorMessage,
+  getDataClient,
+} from "@/lib/amplify";
 
 const ITEMS_PER_PAGE = 10;
+const monthNames = [
+  "Januar",
+  "Februar",
+  "März",
+  "April",
+  "Mai",
+  "Juni",
+  "Juli",
+  "August",
+  "September",
+  "Oktober",
+  "November",
+  "Dezember",
+];
+const dayNames = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+
+const formatTimeLabel = (time?: string | null) => {
+  if (!time) {
+    return "-";
+  }
+
+  return /^\d{2}:\d{2}/.test(time) ? time.slice(0, 5) : time;
+};
 
 export default function AdminDashboard() {
   const [reservations, setReservations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState("table");
@@ -55,38 +77,67 @@ export default function AdminDashboard() {
   } | null>(null);
 
   useEffect(() => {
-    checkAuth();
-    fetchReservations();
+    let cancelled = false;
+
+    const initializeDashboard = async () => {
+      try {
+        await ensureAmplifyConfigured();
+        const authenticated = await checkAuth();
+
+        if (!authenticated || cancelled) {
+          return;
+        }
+
+        await fetchReservations();
+      } catch (dashboardError) {
+        if (!cancelled) {
+          setError(getAmplifyErrorMessage(dashboardError));
+          setLoading(false);
+        }
+      }
+    };
+
+    void initializeDashboard();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const checkAuth = async () => {
     try {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-    } catch (error) {
-      console.error("Auth error:", error);
+      await getCurrentUser();
+      return true;
+    } catch (authError) {
+      console.error("Auth error:", authError);
       setError("Authentifizierung fehlgeschlagen. Bitte neu anmelden.");
       window.location.href = "/admin";
+      return false;
     }
   };
 
   const fetchReservations = async () => {
     try {
+      const client = await getDataClient();
       const { data: items, errors } = await client.models.Reservation.list();
-      if (errors) {
-        console.error("Error fetching reservations:", errors);
-        setReservations([]);
-        return;
+
+      if (errors?.length) {
+        throw new Error(errors[0]?.message || "Reservierungen konnten nicht geladen werden.");
       }
+
       const sortedItems = [...(items || [])].sort(
         (a, b) =>
           new Date(b.createdAt || 0).getTime() -
           new Date(a.createdAt || 0).getTime(),
       );
+
       setReservations(sortedItems);
-    } catch (error) {
-      console.error("Error fetching reservations:", error);
+      setCurrentPage(1);
+      setError("");
+    } catch (fetchError) {
+      console.error("Error fetching reservations:", fetchError);
       setReservations([]);
+      setError(getAmplifyErrorMessage(fetchError));
     } finally {
       setLoading(false);
     }
@@ -97,12 +148,10 @@ export default function AdminDashboard() {
     status: "confirmed" | "cancelled",
   ) => {
     try {
-      const reservation = reservations.find((r) => r.id === id);
+      const client = await getDataClient();
+      const reservation = reservations.find((item) => item.id === id);
 
-      await client.models.Reservation.update({
-        id,
-        status,
-      });
+      await client.models.Reservation.update({ id, status });
 
       if (reservation) {
         fetch("/api/send-email", {
@@ -123,32 +172,38 @@ export default function AdminDashboard() {
         }).catch(console.error);
       }
 
-      fetchReservations();
-    } catch (error) {
-      console.error("Error updating reservation:", error);
+      await fetchReservations();
+    } catch (updateError) {
+      console.error("Error updating reservation:", updateError);
+      setError(getAmplifyErrorMessage(updateError));
     }
   };
 
   const deleteReservation = async (id: string) => {
     if (
       !confirm("Sind Sie sicher, dass Sie diese Reservierung löschen möchten?")
-    )
+    ) {
       return;
+    }
 
     try {
+      const client = await getDataClient();
       await client.models.Reservation.delete({ id });
-      fetchReservations();
-    } catch (error) {
-      console.error("Error deleting reservation:", error);
+      await fetchReservations();
+    } catch (deleteError) {
+      console.error("Error deleting reservation:", deleteError);
+      setError(getAmplifyErrorMessage(deleteError));
     }
   };
 
   const handleSignOut = async () => {
     try {
+      await ensureAmplifyConfigured();
       await signOut();
       window.location.href = "/admin";
-    } catch (error) {
-      console.error("Error signing out:", error);
+    } catch (signOutError) {
+      console.error("Error signing out:", signOutError);
+      setError(getAmplifyErrorMessage(signOutError));
     }
   };
 
@@ -175,35 +230,39 @@ export default function AdminDashboard() {
     }
   };
 
-  // Pagination logic
-  const totalPages = Math.ceil(reservations.length / ITEMS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(reservations.length / ITEMS_PER_PAGE));
   const paginatedReservations = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     return reservations.slice(start, start + ITEMS_PER_PAGE);
   }, [reservations, currentPage]);
 
-  // Calendar logic
   const calendarMonth = selectedDate.getMonth();
   const calendarYear = selectedDate.getFullYear();
-
   const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
   const firstDayOfMonth = new Date(calendarYear, calendarMonth, 1).getDay();
-  const adjustedFirstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; // Monday start
+  const adjustedFirstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
 
   const reservationsByDate = useMemo(() => {
     const map: Record<string, any[]> = {};
-    reservations.forEach((r) => {
-      if (r.date) {
-        if (!map[r.date]) map[r.date] = [];
-        map[r.date].push(r);
+
+    reservations.forEach((reservation) => {
+      if (!reservation.date) {
+        return;
       }
+
+      if (!map[reservation.date]) {
+        map[reservation.date] = [];
+      }
+
+      map[reservation.date].push(reservation);
     });
+
     return map;
   }, [reservations]);
 
   const formatDateKey = (day: number) => {
-    const d = new Date(calendarYear, calendarMonth, day);
-    return d.toISOString().split("T")[0];
+    const date = new Date(calendarYear, calendarMonth, day);
+    return date.toISOString().split("T")[0];
   };
 
   const prevMonth = () => {
@@ -214,44 +273,20 @@ export default function AdminDashboard() {
     setSelectedDate(new Date(calendarYear, calendarMonth + 1, 1));
   };
 
-  const monthNames = [
-    "Januar",
-    "Februar",
-    "März",
-    "April",
-    "Mai",
-    "Juni",
-    "Juli",
-    "August",
-    "September",
-    "Oktober",
-    "November",
-    "Dezember",
-  ];
-
-  const dayNames = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
-
   const handleReservationClick = (reservation: any) => {
     setSelectedReservation(reservation);
   };
 
-  const handleShowAllForDate = (dateKey: string, reservations: any[]) => {
-    const dateObj = new Date(dateKey);
+  const handleShowAllForDate = (dateKey: string, items: any[]) => {
+    const dateObject = new Date(dateKey);
     const formattedDate = new Intl.DateTimeFormat("de-DE", {
       weekday: "long",
       day: "2-digit",
       month: "long",
       year: "numeric",
-    }).format(dateObj);
-    setSelectedDateReservations({ date: formattedDate, reservations });
-  };
+    }).format(dateObject);
 
-  const closeModal = () => {
-    setSelectedReservation(null);
-  };
-
-  const closeDateModal = () => {
-    setSelectedDateReservations(null);
+    setSelectedDateReservations({ date: formattedDate, reservations: items });
   };
 
   if (loading) {
@@ -270,19 +305,17 @@ export default function AdminDashboard() {
             <h1 className="text-2xl font-bold text-gray-900">
               Admin Dashboard
             </h1>
-            <div className="flex items-center gap-4">
-              <Button variant="outline" size="sm" onClick={handleSignOut}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Abmelden
-              </Button>
-            </div>
+            <Button variant="outline" size="sm" onClick={handleSignOut}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Abmelden
+            </Button>
           </div>
         </div>
       </header>
 
       {error && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-          <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-red-800 text-sm">
+          <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
             {error}
           </div>
         </div>
@@ -352,7 +385,7 @@ export default function AdminDashboard() {
                               </div>
                             </TableCell>
                             <TableCell>{reservation.date}</TableCell>
-                            <TableCell>{reservation.time}</TableCell>
+                            <TableCell>{formatTimeLabel(reservation.time)}</TableCell>
                             <TableCell>{reservation.guests}</TableCell>
                             <TableCell>
                               {getStatusBadge(reservation.status)}
@@ -394,9 +427,7 @@ export default function AdminDashboard() {
                                 <Button
                                   size="sm"
                                   variant="ghost"
-                                  onClick={() =>
-                                    deleteReservation(reservation.id)
-                                  }
+                                  onClick={() => deleteReservation(reservation.id)}
                                   className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
                                   title="Löschen"
                                 >
@@ -409,7 +440,6 @@ export default function AdminDashboard() {
                       </TableBody>
                     </Table>
 
-                    {/* Pagination */}
                     {totalPages > 1 && (
                       <div className="flex items-center justify-between px-4 py-3 border-t">
                         <div className="text-sm text-gray-500">
@@ -420,7 +450,7 @@ export default function AdminDashboard() {
                             variant="outline"
                             size="sm"
                             onClick={() =>
-                              setCurrentPage((p) => Math.max(1, p - 1))
+                              setCurrentPage((page) => Math.max(1, page - 1))
                             }
                             disabled={currentPage === 1}
                           >
@@ -431,7 +461,9 @@ export default function AdminDashboard() {
                             variant="outline"
                             size="sm"
                             onClick={() =>
-                              setCurrentPage((p) => Math.min(totalPages, p + 1))
+                              setCurrentPage((page) =>
+                                Math.min(totalPages, page + 1),
+                              )
                             }
                             disabled={currentPage === totalPages}
                           >
@@ -450,7 +482,6 @@ export default function AdminDashboard() {
           <TabsContent value="calendar">
             <Card>
               <CardContent className="p-6">
-                {/* Calendar Header */}
                 <div className="flex items-center justify-between mb-6">
                   <Button variant="outline" size="sm" onClick={prevMonth}>
                     <ChevronLeft className="w-4 h-4" />
@@ -463,7 +494,6 @@ export default function AdminDashboard() {
                   </Button>
                 </div>
 
-                {/* Day Headers */}
                 <div className="grid grid-cols-7 gap-1 mb-2">
                   {dayNames.map((day) => (
                     <div
@@ -475,16 +505,13 @@ export default function AdminDashboard() {
                   ))}
                 </div>
 
-                {/* Calendar Grid */}
                 <div className="grid grid-cols-7 gap-1">
-                  {/* Empty cells for days before the first day of month */}
-                  {Array.from({ length: adjustedFirstDay }).map((_, i) => (
-                    <div key={`empty-${i}`} className="min-h-[100px] p-2" />
+                  {Array.from({ length: adjustedFirstDay }).map((_, index) => (
+                    <div key={`empty-${index}`} className="min-h-[100px] p-2" />
                   ))}
 
-                  {/* Days of the month */}
-                  {Array.from({ length: daysInMonth }).map((_, i) => {
-                    const day = i + 1;
+                  {Array.from({ length: daysInMonth }).map((_, index) => {
+                    const day = index + 1;
                     const dateKey = formatDateKey(day);
                     const dayReservations = reservationsByDate[dateKey] || [];
                     const isToday =
@@ -506,20 +533,20 @@ export default function AdminDashboard() {
                           {day}
                         </div>
                         <div className="space-y-1">
-                          {dayReservations.slice(0, displayLimit).map((r) => (
+                          {dayReservations.slice(0, displayLimit).map((reservation) => (
                             <div
-                              key={r.id}
-                              onClick={() => handleReservationClick(r)}
+                              key={reservation.id}
+                              onClick={() => handleReservationClick(reservation)}
                               className={`text-xs p-1 rounded truncate cursor-pointer hover:opacity-80 transition-opacity ${
-                                r.status === "confirmed"
+                                reservation.status === "confirmed"
                                   ? "bg-green-100 text-green-800"
-                                  : r.status === "cancelled"
+                                  : reservation.status === "cancelled"
                                     ? "bg-red-100 text-red-800"
                                     : "bg-yellow-100 text-yellow-800"
                               }`}
-                              title={`${r.name} - ${r.time} - ${r.guests} Gäste`}
+                              title={`${reservation.name} - ${formatTimeLabel(reservation.time)} - ${reservation.guests} Gäste`}
                             >
-                              {r.time} {r.name}
+                              {formatTimeLabel(reservation.time)} {reservation.name}
                             </div>
                           ))}
                           {dayReservations.length > displayLimit && (
@@ -539,7 +566,6 @@ export default function AdminDashboard() {
                   })}
                 </div>
 
-                {/* Calendar Legend */}
                 <div className="flex gap-4 mt-6 pt-4 border-t">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded bg-yellow-100 border border-yellow-300" />
@@ -560,14 +586,13 @@ export default function AdminDashboard() {
         </Tabs>
       </main>
 
-      {/* Reservation Detail Modal */}
       {selectedReservation && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b">
               <h3 className="text-lg font-semibold">Reservierungsdetails</h3>
               <button
-                onClick={closeModal}
+                onClick={() => setSelectedReservation(null)}
                 className="p-1 hover:bg-gray-100 rounded-full transition-colors"
               >
                 <X className="w-5 h-5" />
@@ -588,7 +613,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="flex items-center gap-3 text-gray-600">
                   <Clock className="w-4 h-4" />
-                  <span>{selectedReservation.time} Uhr</span>
+                  <span>{formatTimeLabel(selectedReservation.time)} Uhr</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-600">
                   <Users className="w-4 h-4" />
@@ -631,7 +656,7 @@ export default function AdminDashboard() {
                         selectedReservation.id,
                         "confirmed",
                       );
-                      closeModal();
+                      setSelectedReservation(null);
                     }}
                     className="bg-green-600 hover:bg-green-700 text-white"
                   >
@@ -648,7 +673,7 @@ export default function AdminDashboard() {
                         selectedReservation.id,
                         "cancelled",
                       );
-                      closeModal();
+                      setSelectedReservation(null);
                     }}
                     className="text-orange-600 border-orange-300 hover:bg-orange-50"
                   >
@@ -661,7 +686,7 @@ export default function AdminDashboard() {
                   variant="outline"
                   onClick={() => {
                     deleteReservation(selectedReservation.id);
-                    closeModal();
+                    setSelectedReservation(null);
                   }}
                   className="text-red-600 border-red-300 hover:bg-red-50"
                 >
@@ -674,7 +699,6 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Date Reservations List Modal */}
       {selectedDateReservations && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
@@ -683,7 +707,7 @@ export default function AdminDashboard() {
                 Reservierungen für {selectedDateReservations.date}
               </h3>
               <button
-                onClick={closeDateModal}
+                onClick={() => setSelectedDateReservations(null)}
                 className="p-1 hover:bg-gray-100 rounded-full transition-colors"
               >
                 <X className="w-5 h-5" />
@@ -691,34 +715,36 @@ export default function AdminDashboard() {
             </div>
             <div className="p-4 space-y-2">
               {selectedDateReservations.reservations
-                .sort((a, b) => (a.time || "").localeCompare(b.time || ""))
-                .map((r) => (
+                .sort((a, b) =>
+                  formatTimeLabel(a.time).localeCompare(formatTimeLabel(b.time)),
+                )
+                .map((reservation) => (
                   <div
-                    key={r.id}
+                    key={reservation.id}
                     onClick={() => {
-                      closeDateModal();
-                      handleReservationClick(r);
+                      setSelectedDateReservations(null);
+                      handleReservationClick(reservation);
                     }}
                     className={`p-3 rounded-md cursor-pointer hover:opacity-80 transition-opacity ${
-                      r.status === "confirmed"
+                      reservation.status === "confirmed"
                         ? "bg-green-50 border border-green-200"
-                        : r.status === "cancelled"
+                        : reservation.status === "cancelled"
                           ? "bg-red-50 border border-red-200"
                           : "bg-yellow-50 border border-yellow-200"
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="font-medium">{r.name}</div>
-                      {getStatusBadge(r.status)}
+                      <div className="font-medium">{reservation.name}</div>
+                      {getStatusBadge(reservation.status)}
                     </div>
                     <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
                       <span className="flex items-center gap-1">
                         <Clock className="w-3 h-3" />
-                        {r.time} Uhr
+                        {formatTimeLabel(reservation.time)} Uhr
                       </span>
                       <span className="flex items-center gap-1">
                         <Users className="w-3 h-3" />
-                        {r.guests} Gäste
+                        {reservation.guests} Gäste
                       </span>
                     </div>
                   </div>

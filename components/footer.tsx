@@ -6,7 +6,7 @@ const navLinks = [
   { href: "#menu", label: "Speisekarte" },
   { href: "#team", label: "Unser Team" },
   { href: "#gallery", label: "Galerie" },
-  { href: "#contact", label: "Kontakt" },
+  { href: "#reservation", label: "Kontakt" },
 ]
 
 export function Footer() {
@@ -86,9 +86,7 @@ export function Footer() {
               Reservieren Sie Ihren Tisch online oder telefonisch.
             </p>
             <a
-              href="https://www.quandoo.de/de/restaurant/carpe-diem-berlin-lichterfelde-3708"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#reservation"
               className="inline-block bg-terracotta text-cream px-6 py-3 font-sans uppercase tracking-wider text-xs hover:bg-terracotta-dark transition-all duration-300 rounded-sm"
             >
               Jetzt reservieren

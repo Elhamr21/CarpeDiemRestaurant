@@ -1,7 +1,7 @@
 import { defineStorage } from '@aws-amplify/backend';
 
 export const storage = defineStorage({
-  name: 'carpdiemAssets',
+  name: 'carpeDiemAssets',
   access: (allow) => ({
     'attachments/*': [
       allow.guest.to(['read', 'write']),
