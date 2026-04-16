@@ -372,18 +372,18 @@ export function MenuSection() {
           {currentMenu.items.map((item) => (
             <button
               key={item.id}
-              onClick={() => openDishModal(item)}
+              // onClick={() => openDishModal(item)}
               className="group bg-cream rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 text-left"
             >
               {/* Dish Image */}
               <div style={{ position: "relative" }} className="aspect-[4/3] overflow-hidden">
-                <Image
+                {/* <Image
                   src={item.image}
                   alt={item.name}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
-                />
+                /> */}
                 <div className="absolute inset-0 bg-gradient-to-t from-fig/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
                   <span className="bg-cream text-wine px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
