@@ -48,6 +48,7 @@ export function GallerySection() {
   return (
     <section id="gallery" className="py-24 bg-cream">
       <div className="container mx-auto px-4">
+
         {/* Section Header */}
         <div className="text-center mb-16">
           <p className="font-sans text-sm uppercase tracking-[0.3em] text-terracotta mb-2">
@@ -57,29 +58,28 @@ export function GallerySection() {
             Galerie
           </h2>
           <p className="max-w-2xl mx-auto text-muted-foreground leading-relaxed">
-            Erleben Sie die Atmosphäre unseres Restaurants und lernen Sie unser
-            Team kennen.
+            Erleben Sie die Atmosphäre unseres Restaurants und lernen Sie unser Team kennen.
           </p>
         </div>
 
-        {/* Gallery Preview Grid - Show first 4 images */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          {galleryImages.slice(1, 2).map((image, index) => (//here we change form(0,4) to (1,2) to show only 1 image
+        {/* Centered Single Image */}
+        <div className="flex justify-center mb-12">
+          {galleryImages.slice(1, 2).map((image, index) => (
             <Link
               key={index}
               href="/gallery"
-              className="group overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500"
+              className="group w-full max-w-sm overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500"
             >
               <div className="relative aspect-square">
                 <Image
                   src={image.src}
                   alt={image.alt}
                   fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
+                  sizes="(max-width: 768px) 100vw, 400px"
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  style={{ position: "absolute" }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-wine/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
                 <div className="absolute bottom-0 left-0 right-0 p-4 text-cream translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                   <p className="font-serif text-lg">{image.title}</p>
                 </div>
@@ -98,6 +98,7 @@ export function GallerySection() {
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
+
       </div>
     </section>
   )
