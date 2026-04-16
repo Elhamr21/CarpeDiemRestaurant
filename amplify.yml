@@ -5,7 +5,13 @@ backend:
       commands:
         - corepack enable
         - pnpm config set store-dir .pnpm-store
-        - pnpm install --frozen-lockfile --prefer-offline
+        - |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile --prefer-offline
+          else
+            echo "pnpm-lock.yaml not found; continuing with a non-frozen install for this build."
+            pnpm install --no-frozen-lockfile --prefer-offline
+          fi
         - |
           if pnpm exec node ./node_modules/@aws-amplify/backend-cli/lib/ampx.js pipeline-deploy \
             --branch "${AWS_BRANCH}" \
@@ -36,7 +42,13 @@ frontend:
       commands:
         - corepack enable
         - pnpm config set store-dir .pnpm-store
-        - pnpm install --frozen-lockfile
+        - |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+          else
+            echo "pnpm-lock.yaml not found; continuing with a non-frozen install for this build."
+            pnpm install --no-frozen-lockfile
+          fi
         # Create .env.production with email config from Amplify environment variables
         - |
           cat > .env.production << EOF
