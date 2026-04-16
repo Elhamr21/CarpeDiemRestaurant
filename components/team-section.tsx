@@ -84,7 +84,7 @@ export function TeamSection() {
 
   <div className="space-y-4 text-muted-foreground leading-relaxed">
     <p>
-      Das Carpe Diem wurde 1990 mit einer einfachen Vision gegründet:
+      Das Carpe Diem wurde 2001 mit einer einfachen Vision gegründet:
       authentische italienische Küche nach Berlin zu bringen. Was als
       kleine Pizzeria begann, ist heute ein beliebter Treffpunkt für
       Genießer aus ganz Berlin und darüber hinaus.

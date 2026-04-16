@@ -27,7 +27,7 @@ const galleryImages = [
   {
     src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
     alt: "Historisches Team Foto",
-    title: "Tradition seit 1990",
+    title: "Tradition seit 2001",
     description: "Über 30 Jahre italienische Gastlichkeit"
   },
   {

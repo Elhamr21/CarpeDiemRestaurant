@@ -27,7 +27,7 @@ export function Footer() {
               </p>
             </div>
             <p className="text-cream/70 text-sm leading-relaxed">
-              Authentische italienische Küche in Berlin-Lichterfelde seit 1990.
+              Authentische italienische Küche in Berlin-Lichterfelde seit 2001.
               Genießen Sie hausgemachte Pasta, traditionelle Pizza und erlesene Weine.
             </p>
           </div>

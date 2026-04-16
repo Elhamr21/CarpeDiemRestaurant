@@ -41,7 +41,7 @@ export function Hero() {
         >
           {/* Tagline */}
           <p className="font-sans text-xs sm:text-sm uppercase tracking-[0.3em] sm:tracking-[0.4em] text-cream/80 mb-2 sm:mb-4">
-            Seit 1990 in Berlin-Lichterfelde
+            Seit 2001 in Berlin-Lichterfelde
           </p>
 
           {/* Main Title */}
