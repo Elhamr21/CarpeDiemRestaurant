@@ -164,14 +164,14 @@ export default function GalleryPage() {
             >
               {/* Image */}
               <div className="relative aspect-[4/3] overflow-hidden">
-                <Image
+                {/* <Image
                   src={image.src}
                   alt={image.alt}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                   style={{ position: "absolute" }}
-                />
+                /> */}
                 <div className="absolute inset-0 bg-gradient-to-t from-wine/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
               
