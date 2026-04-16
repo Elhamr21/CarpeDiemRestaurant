@@ -20,7 +20,7 @@ export function TeamSection() {
     <section id="team" className="py-24 bg-cream">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        {/* <div className="text-center mb-16">
           <p className="font-sans text-sm uppercase tracking-[0.3em] text-terracotta mb-2">
             La Nostra Famiglia
           </p>
@@ -32,7 +32,7 @@ export function TeamSection() {
           </p>
         </div>
 
-        {/* Team Images - Only 2 images */}
+        Team Images - Only 2 images
         <div className="grid md:grid-cols-2 gap-8 mb-16 max-w-4xl mx-auto">
           {teamImages.map((image, index) => (
             <div
@@ -40,14 +40,14 @@ export function TeamSection() {
               className="group overflow-hidden rounded-xl shadow-xl hover:shadow-2xl transition-all duration-500"
             >
               <div className="relative aspect-[3/4]">
-                {/* <Image
+                <Image
                   src={image.src}
                   alt={image.alt}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   style={{ position: "absolute" }}
-                /> */}
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-wine/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-cream translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                   <p className="font-serif text-xl italic">{image.caption}</p>
@@ -55,7 +55,7 @@ export function TeamSection() {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
 
         {/* Story Section */}
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
