@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useEffect, useState } from "react"
 import { ChevronDown, MapPin, Clock, Star } from "lucide-react"
 
@@ -39,6 +40,19 @@ export function Hero() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
+          <div className="mb-4 sm:mb-6 flex justify-center">
+            <div className="relative h-20 w-32 sm:h-24 sm:w-40 md:h-28 md:w-48">
+              <Image
+                src="/photos/cesar.png"
+                alt="Carpe Diem Logo"
+                fill
+                sizes="(max-width: 640px) 128px, (max-width: 768px) 160px, 192px"
+                className="object-contain drop-shadow-2xl"
+                priority
+              />
+            </div>
+          </div>
+
           {/* Tagline */}
           <p className="font-sans text-xs sm:text-sm uppercase tracking-[0.3em] sm:tracking-[0.4em] text-cream/80 mb-2 sm:mb-4">
             Seit 2001 in Berlin-Lichterfelde
@@ -90,8 +104,8 @@ export function Hero() {
             <div className="flex items-center gap-3 bg-cream/10 backdrop-blur-sm px-4 sm:px-6 py-3 sm:py-4 rounded-sm">
               <Clock className="w-5 h-5 text-sage flex-shrink-0" />
               <div className="text-left min-w-0">
-                <p className="text-cream font-sans text-xs sm:text-sm break-words">Mi - So: 12 - 22</p>
-                <p className="text-cream/60 text-xs">Mo & Di Ruhetag</p>
+                <p className="text-cream font-sans text-xs sm:text-sm break-words">Mo, Mi - So: 12 - 23</p>
+                <p className="text-cream/60 text-xs">Dienstag: Ruhetag</p>
               </div>
             </div>
             <div className="flex items-center gap-3 bg-cream/10 backdrop-blur-sm px-4 sm:px-6 py-3 sm:py-4 rounded-sm">

@@ -63,7 +63,7 @@ export function TeamSection() {
           <div className="relative">
             <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-2xl">
               <Image
-                src="/photos/cesar.png"
+                src="/photos/cesar.jpg"
                 alt="Gastfreundschaft im Carpe Diem"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
