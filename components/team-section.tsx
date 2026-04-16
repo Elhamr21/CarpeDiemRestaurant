@@ -40,14 +40,14 @@ export function TeamSection() {
               className="group overflow-hidden rounded-xl shadow-xl hover:shadow-2xl transition-all duration-500"
             >
               <div className="relative aspect-[3/4]">
-                <Image
+                {/* <Image
                   src={image.src}
                   alt={image.alt}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   style={{ position: "absolute" }}
-                />
+                /> */}
                 <div className="absolute inset-0 bg-gradient-to-t from-wine/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-cream translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                   <p className="font-serif text-xl italic">{image.caption}</p>
