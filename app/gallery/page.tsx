@@ -155,27 +155,27 @@ export default function GalleryPage() {
         </div>
 
         {/* Gallery Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {galleryImages.map((image, index) => (
             <button
               key={index}
               onClick={() => openLightbox(index)}
               className="group text-left bg-cream rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
             >
-              {/* Image */}
+              Image
               <div className="relative aspect-[4/3] overflow-hidden">
-                {/* <Image
+                <Image
                   src={image.src}
                   alt={image.alt}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                   style={{ position: "absolute" }}
-                /> */}
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-wine/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
               
-              {/* Info */}
+              Info
               <div className="p-5">
                 <h3 className="font-serif text-xl text-wine group-hover:text-terracotta transition-colors mb-2">
                   {image.title}
@@ -186,7 +186,7 @@ export default function GalleryPage() {
               </div>
             </button>
           ))}
-        </div>
+        </div> */}
       </div>
 
       {/* Lightbox */}
