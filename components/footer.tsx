@@ -120,13 +120,13 @@ export function Footer() {
       {/* Djathtas */}
       <div className="flex items-center gap-6">
         <Link
-          href="#"
+          href="/impressum"
           className="text-cream/50 hover:text-cream/70 text-xs transition-colors"
         >
           Impressum
         </Link>
         <Link
-          href="#"
+          href="/datenschutz"
           className="text-cream/50 hover:text-cream/70 text-xs transition-colors"
         >
           Datenschutz
