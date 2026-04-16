@@ -64,7 +64,7 @@ export function GallerySection() {
 
         {/* Gallery Preview Grid - Show first 4 images */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          {galleryImages.slice(0, 4).map((image, index) => (
+          {galleryImages.slice(1, 2).map((image, index) => (//here we change form(0,4) to (1,2) to show only 1 image
             <Link
               key={index}
               href="/gallery"
