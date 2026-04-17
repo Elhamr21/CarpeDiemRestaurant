@@ -107,20 +107,20 @@ export default function GalleryPage() {
       {/* Header */}
       <header className="bg-cream border-b border-travertine">
         <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
+          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3">
             <Link 
               href="/"
-              className="flex items-center gap-2 text-wine hover:text-terracotta transition-colors"
+              className="flex shrink-0 items-center gap-2 text-wine hover:text-terracotta transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span className="font-sans text-sm uppercase tracking-wider">Zurück</span>
+              <span className="hidden font-sans text-sm uppercase tracking-wider sm:inline">Zurück</span>
             </Link>
             
-            <div className="text-center">
+            <div className="min-w-0 text-center">
               <p className="text-xs uppercase tracking-[0.3em] text-terracotta">
                 
               </p>
-              <h1 className="font-serif text-2xl text-wine italic">
+              <h1 className="truncate font-serif text-2xl text-wine italic">
                 Carpe Diem
               </h1>
               <p className="text-xs uppercase tracking-[0.3em] text-terracotta">
@@ -130,7 +130,7 @@ export default function GalleryPage() {
 
             <a
               href="/#reservation"
-              className="bg-wine text-cream px-4 py-2 rounded-lg font-sans text-xs uppercase tracking-wider hover:bg-wine-dark transition-colors"
+              className="inline-flex shrink-0 whitespace-nowrap bg-wine text-cream px-3 py-2 sm:px-4 rounded-lg font-sans text-[11px] sm:text-xs uppercase tracking-wider hover:bg-wine-dark transition-colors"
             >
               Reservieren
             </a>

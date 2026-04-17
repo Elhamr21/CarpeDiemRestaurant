@@ -8,7 +8,12 @@ const EMAIL_FROM =
   process.env.EMAIL_FROM || "Carpe Diem <reservierung@carpe-diem.de>";
 const NOTIFICATION_TO =
   process.env.NOTIFICATION_TO || "reservierung@carpe-diem.de";
+const EXTRA_NOTIFICATION_TO = "burimmusa33@gmail.com";
 const RESTAURANT_PHONE = "+49 30 711 36 44";
+
+const notificationRecipients = Array.from(
+  new Set([NOTIFICATION_TO, EXTRA_NOTIFICATION_TO].filter(Boolean)),
+);
 
 let resend: Resend | null = null;
 
@@ -196,13 +201,13 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     let emailContent: { subject: string; body: string };
-    let recipient: string;
+    let recipient: string | string[];
     let replyTo: string | undefined;
 
     switch (type) {
       case "reservation":
         emailContent = buildReservationEmail(payload);
-        recipient = NOTIFICATION_TO;
+        recipient = notificationRecipients;
         replyTo = payload.email;
         break;
       case "contact":

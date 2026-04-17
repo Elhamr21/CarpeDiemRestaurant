@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import Image from "next/image"
+import Image from "next/image";
 
 const teamImages = [
   {
@@ -13,7 +13,7 @@ const teamImages = [
     alt: "Team am Eingang",
     caption: "Herzlich Willkommen",
   },
-]
+];
 
 export function TeamSection() {
   return (
@@ -60,10 +60,10 @@ export function TeamSection() {
         {/* Story Section */}
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
           {/* Image */}
-          <div className="relative">
+          <div className="relative mx-6 xl:mx-0">
             <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-2xl">
               <Image
-                src="/photos/cesar.jpg"
+                src="/photos/1000028487.jpg"
                 alt="Gastfreundschaft im Carpe Diem"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -78,42 +78,43 @@ export function TeamSection() {
 
           {/* Content */}
           <div>
-  <h3 className="font-serif text-3xl md:text-4xl text-wine mb-6">
-    Unsere Geschichte
-  </h3>
+            <h3 className="font-serif text-3xl md:text-4xl text-wine mb-6">
+              Unsere Geschichte
+            </h3>
 
-  <div className="space-y-4 text-muted-foreground leading-relaxed">
-    <p>
-      Das Carpe Diem wurde 2001 mit einer einfachen Vision gegründet:
-      authentische italienische Küche nach Berlin zu bringen. Was als
-      kleine Pizzeria begann, ist heute ein beliebter Treffpunkt für
-      Genießer aus ganz Berlin und darüber hinaus.
-    </p>
+            <div className="space-y-4 text-muted-foreground leading-relaxed">
+              <p>
+                Das Carpe Diem wurde 2001 mit einer einfachen Vision gegründet:
+                authentische italienische Küche nach Berlin zu bringen. Was als
+                kleine Pizzeria begann, ist heute ein beliebter Treffpunkt für
+                Genießer aus ganz Berlin und darüber hinaus.
+              </p>
 
-    <p>
-      Ein wichtiger Teil dieser Geschichte ist Cesar, der seit vielen
-      Jahren das Herz und die Seele unseres Restaurants prägt. Mit seiner
-      Leidenschaft für italienische Küche und seinem Engagement hat er
-      dazu beigetragen, dass Carpe Diem zu dem geworden ist, was es heute ist.
-    </p>
+              <p>
+                Ein wichtiger Teil dieser Geschichte ist Cesar, der seit vielen
+                Jahren das Herz und die Seele unseres Restaurants prägt. Mit
+                seiner Leidenschaft für italienische Küche und seinem Engagement
+                hat er dazu beigetragen, dass Carpe Diem zu dem geworden ist,
+                was es heute ist.
+              </p>
 
-    <p>
-      Unsere Rezepte stammen aus den verschiedenen Regionen Italiens
-      und werden von Generation zu Generation weitergegeben. Wir legen
-      größten Wert auf frische, hochwertige Zutaten und authentische
-      Zubereitungsmethoden.
-    </p>
+              <p>
+                Unsere Rezepte stammen aus den verschiedenen Regionen Italiens
+                und werden von Generation zu Generation weitergegeben. Wir legen
+                größten Wert auf frische, hochwertige Zutaten und authentische
+                Zubereitungsmethoden.
+              </p>
 
-    <p>
-      Das Herzstück unseres Restaurants ist unser traditioneller
-      Steinofen, in dem unsere Pizzen bei perfekter Temperatur gebacken
-      werden. Dazu servieren wir erlesene Weine aus den besten
-      Anbaugebieten Italiens.
-    </p>
-  </div>
-</div>
+              <p>
+                Das Herzstück unseres Restaurants ist unser traditioneller
+                Steinofen, in dem unsere Pizzen bei perfekter Temperatur
+                gebacken werden. Dazu servieren wir erlesene Weine aus den
+                besten Anbaugebieten Italiens.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-  )
+  );
 }

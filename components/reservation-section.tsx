@@ -281,8 +281,8 @@ export function ReservationSection() {
             className={cn(
               "space-y-6 transition-all duration-700 delay-200",
               isVisible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 -translate-x-8",
+                ? "opacity-100 translate-y-0 xl:translate-x-0"
+                : "opacity-0 translate-y-8 xl:translate-y-0 xl:-translate-x-8",
             )}
           >
             <div className="bg-parchment/80 backdrop-blur-sm p-8 rounded-lg shadow-lg border border-travertine/50">
@@ -354,7 +354,9 @@ export function ReservationSection() {
           <div
             className={cn(
               "transition-all duration-700 delay-400",
-              isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8",
+              isVisible
+                ? "opacity-100 translate-y-0 xl:translate-x-0"
+                : "opacity-0 translate-y-8 xl:translate-y-0 xl:translate-x-8",
             )}
           >
             <div className="bg-parchment/80 backdrop-blur-sm p-8 md:p-10 rounded-lg shadow-xl border border-travertine/50">

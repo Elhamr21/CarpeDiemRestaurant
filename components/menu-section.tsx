@@ -382,24 +382,24 @@ export function MenuSection() {
           {currentMenu.items.map((item) => (
             <button
               key={item.id}
-              className="bg-cream rounded-xl p-5 text-left border border-transparent"
+              className="w-full min-w-0 bg-cream rounded-xl p-5 text-left border border-transparent"
             >
               <div className="flex justify-between items-start gap-3 mb-2">
-                <div>
-                  <h4 className="font-serif text-lg text-wine">
+                <div className="min-w-0">
+                  <h4 className="font-serif text-lg text-wine break-words">
                     {item.name}
                   </h4>
-                  <p className="font-serif text-sm text-terracotta italic">
+                  <p className="font-serif text-sm text-terracotta italic break-words">
                     {item.nameIt}
                   </p>
                 </div>
 
-                <span className="font-serif text-xl text-wine whitespace-nowrap font-medium">
+                <span className="shrink-0 font-serif text-xl text-wine whitespace-nowrap font-medium">
                   {item.price} €
                 </span>
               </div>
 
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground break-words">
                 {item.description}
               </p>
             </button>

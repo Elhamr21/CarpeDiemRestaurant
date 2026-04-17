@@ -174,20 +174,20 @@ export default function MenuPage() {
       {/* Header */}
       <header className="bg-cream border-b border-travertine sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3">
             <Link 
               href="/"
-              className="flex items-center gap-2 text-wine hover:text-terracotta transition-colors"
+              className="flex shrink-0 items-center gap-2 text-wine hover:text-terracotta transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span className="font-sans text-sm uppercase tracking-wider">Zurück</span>
+              <span className="hidden font-sans text-sm uppercase tracking-wider sm:inline">Zurück</span>
             </Link>
             
-            <div className="text-center">
+            <div className="min-w-0 text-center">
               <p className="text-xs uppercase tracking-[0.3em] text-terracotta">
                 
               </p>
-              <h1 className="font-serif text-2xl text-wine italic">
+              <h1 className="truncate font-serif text-2xl text-wine italic">
                 Carpe Diem
               </h1>
               <p className="text-xs uppercase tracking-[0.3em] text-terracotta">
@@ -197,7 +197,7 @@ export default function MenuPage() {
 
             <a
               href="/#reservation"
-              className="bg-wine text-cream px-4 py-2 rounded-lg font-sans text-xs uppercase tracking-wider hover:bg-wine-dark transition-colors"
+              className="inline-flex shrink-0 whitespace-nowrap bg-wine text-cream px-3 py-2 sm:px-4 rounded-lg font-sans text-[11px] sm:text-xs uppercase tracking-wider hover:bg-wine-dark transition-colors"
             >
               Reservieren
             </a>
@@ -270,7 +270,7 @@ export default function MenuPage() {
                   onMouseLeave={() => setHoveredItem(null)}
                   onClick={() => setSelectedItem(selectedItem === item.id ? null : item.id)}
                   className={cn(
-                    "w-full text-left p-4 rounded-xl transition-all duration-300 border",
+                    "w-full min-w-0 text-left p-4 rounded-xl transition-all duration-300 border",
                     selectedItem === item.id
                       ? "bg-wine text-cream border-wine shadow-lg"
                       : hoveredItem === item.id
@@ -278,23 +278,23 @@ export default function MenuPage() {
                       : "bg-cream/50 border-travertine hover:bg-cream"
                   )}
                 >
-                  <div className="flex justify-between items-start gap-4">
-                    <div className="flex-1">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-start sm:gap-4">
+                    <div className="min-w-0 flex-1">
                       <h4 className={cn(
-                        "font-serif text-lg transition-colors",
+                        "font-serif text-lg transition-colors break-words",
                         selectedItem === item.id ? "text-cream" : "text-wine"
                       )}>
                         {item.name}
                       </h4>
                       <p className={cn(
-                        "text-sm mt-1 transition-colors",
+                        "text-sm mt-1 transition-colors break-words",
                         selectedItem === item.id ? "text-cream/80" : "text-muted-foreground"
                       )}>
                         {item.description}
                       </p>
                     </div>
                     <span className={cn(
-                      "font-serif text-lg whitespace-nowrap font-medium transition-colors",
+                      "shrink-0 font-serif text-lg whitespace-nowrap font-medium transition-colors",
                       selectedItem === item.id ? "text-cream" : "text-terracotta"
                     )}>
                       {item.price} &euro;
