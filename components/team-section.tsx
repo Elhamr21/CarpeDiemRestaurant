@@ -63,11 +63,11 @@ export function TeamSection() {
           <div className="relative mx-6 xl:mx-0">
             <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-2xl">
               <Image
-                src="/photos/1000028487.jpg"
-                alt="Gastfreundschaft im Carpe Diem"
+                src="/photos/cesar.png"
+                alt="Carpe Diem Logo"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
+                className="object-contain bg-white"
                 style={{ position: "absolute" }}
               />
             </div>
