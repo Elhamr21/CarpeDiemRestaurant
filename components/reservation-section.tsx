@@ -42,6 +42,9 @@ const timeSlots = [
 
 const GENERIC_SUBMIT_ERROR =
   "Fehler beim Absenden der Reservierung. Bitte versuchen Sie es erneut."
+const RESERVATION_EMAIL_ERROR =
+  "Ihre Reservierung wurde gespeichert, aber die E-Mail-Benachrichtigung konnte nicht vollständig versendet werden. Bitte rufen Sie uns unter 030 711 36 44 an."
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const createInitialFormData = () => ({
   name: "",
@@ -60,6 +63,14 @@ const asNonEmptyString = (value: unknown) => {
 
   const trimmed = value.trim()
   return trimmed.length > 0 ? trimmed : null
+}
+
+const getApiErrorMessage = (value: unknown) => {
+  if (typeof value === "object" && value !== null) {
+    return asNonEmptyString((value as Record<string, unknown>).error)
+  }
+
+  return null
 }
 
 const firstGraphQlErrorMessage = (value: unknown) => {
@@ -179,26 +190,56 @@ export function ReservationSection() {
 
     try {
       const client = await getDataClient()
+      const normalizedFormData = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        guests: formData.guests,
+        date: formData.date.trim(),
+        time: formData.time.trim(),
+        message: formData.message.trim(),
+      }
+
+      if (!normalizedFormData.name) {
+        throw new Error("Bitte geben Sie Ihren vollständigen Namen ein.")
+      }
+
+      if (!EMAIL_PATTERN.test(normalizedFormData.email)) {
+        throw new Error("Bitte geben Sie eine gültige E-Mail-Adresse ein.")
+      }
+
+      if (!normalizedFormData.phone) {
+        throw new Error("Bitte geben Sie Ihre Telefonnummer ein.")
+      }
+
+      if (!normalizedFormData.date) {
+        throw new Error("Bitte wählen Sie ein Datum aus.")
+      }
+
+      if (!normalizedFormData.time) {
+        throw new Error("Bitte wählen Sie eine Uhrzeit aus.")
+      }
+
       const guests =
-        formData.guests === "10+"
+        normalizedFormData.guests === "10+"
           ? 10
-          : Number.parseInt(formData.guests, 10)
+          : Number.parseInt(normalizedFormData.guests, 10)
 
       if (!Number.isFinite(guests) || guests <= 0) {
         throw new Error("Bitte wählen Sie eine gültige Anzahl an Gästen.")
       }
 
-      const awsTime = toAwsTime(formData.time)
+      const awsTime = toAwsTime(normalizedFormData.time)
       const specialRequests = normalizeSpecialRequests(
-        formData.message,
-        formData.guests,
+        normalizedFormData.message,
+        normalizedFormData.guests,
       )
 
       const { data, errors } = await client.models.Reservation.create({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        date: formData.date,
+        name: normalizedFormData.name,
+        email: normalizedFormData.email,
+        phone: normalizedFormData.phone,
+        date: normalizedFormData.date,
         time: awsTime,
         guests,
         specialRequests: specialRequests || undefined,
@@ -214,32 +255,32 @@ export function ReservationSection() {
       }
 
       const emailPayload = {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        date: formData.date,
-        time: formData.time,
+        reservationId: data.id,
+        name: normalizedFormData.name,
+        email: normalizedFormData.email,
+        phone: normalizedFormData.phone,
+        date: normalizedFormData.date,
+        time: awsTime,
         guests,
         specialRequests: specialRequests || undefined,
       }
 
-      fetch("/api/send-email", {
+      const emailResponse = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          type: "reservation",
+          type: "reservation_request",
           payload: emailPayload,
         }),
-      }).catch(console.error)
+      })
+      const emailResult = await emailResponse.json().catch(() => null)
 
-      fetch("/api/send-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "reservation_received",
-          payload: emailPayload,
-        }),
-      }).catch(console.error)
+      if (!emailResponse.ok || !emailResult?.success) {
+        console.error("Reservation email API error:", emailResult)
+        throw new Error(
+          getApiErrorMessage(emailResult) || RESERVATION_EMAIL_ERROR,
+        )
+      }
 
       setFormData(createInitialFormData())
       setIsSubmitted(true)

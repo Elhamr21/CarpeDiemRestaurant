@@ -61,6 +61,18 @@ const formatTimeLabel = (time?: string | null) => {
   return /^\d{2}:\d{2}/.test(time) ? time.slice(0, 5) : time;
 };
 
+const getApiErrorMessage = (value: unknown) => {
+  if (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as Record<string, unknown>).error === "string"
+  ) {
+    return (value as Record<string, string>).error;
+  }
+
+  return null;
+};
+
 export default function AdminDashboard() {
   const [reservations, setReservations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -150,16 +162,18 @@ export default function AdminDashboard() {
     try {
       const client = await getDataClient();
       const reservation = reservations.find((item) => item.id === id);
+      let emailError = "";
 
       await client.models.Reservation.update({ id, status });
 
       if (reservation) {
-        fetch("/api/send-email", {
+        const emailResponse = await fetch("/api/send-email", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             type: "reservation_confirmation",
             payload: {
+              reservationId: reservation.id,
               name: reservation.name,
               email: reservation.email,
               date: reservation.date,
@@ -169,10 +183,22 @@ export default function AdminDashboard() {
               status,
             },
           }),
-        }).catch(console.error);
+        });
+        const emailResult = await emailResponse.json().catch(() => null);
+
+        if (!emailResponse.ok || !emailResult?.success) {
+          emailError =
+            getApiErrorMessage(emailResult) ||
+            "Status wurde gespeichert, aber die E-Mail konnte nicht versendet werden.";
+          console.error("Reservation status email API error:", emailResult);
+        }
       }
 
       await fetchReservations();
+
+      if (emailError) {
+        setError(emailError);
+      }
     } catch (updateError) {
       console.error("Error updating reservation:", updateError);
       setError(getAmplifyErrorMessage(updateError));

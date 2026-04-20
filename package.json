@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@aws-amplify/backend": "^1.20.0",
+    "@aws-sdk/client-sesv2": "^3.1032.0",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "1.2.12",
     "@radix-ui/react-alert-dialog": "1.1.15",
@@ -61,7 +62,6 @@
     "react-hook-form": "^7.54.1",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.0",
-    "resend": "^6.9.2",
     "sonner": "^1.7.1",
     "tailwind-merge": "^3.3.1",
     "vaul": "^1.1.2",

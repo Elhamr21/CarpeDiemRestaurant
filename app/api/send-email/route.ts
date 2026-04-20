@@ -1,54 +1,257 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
+import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2";
+import { z } from "zod";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const EMAIL_FROM =
-  process.env.EMAIL_FROM || "Carpe Diem <reservierung@carpe-diem.de>";
-const NOTIFICATION_TO =
-  process.env.NOTIFICATION_TO || "reservierung@carpe-diem.de";
-const EXTRA_NOTIFICATION_TO = "burimmusa33@gmail.com";
-const RESTAURANT_PHONE = "+49 30 711 36 44";
+const envValue = (value: string | undefined, fallback: string) =>
+  value?.trim() || fallback;
+const SIMPLE_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const notificationRecipients = Array.from(
-  new Set([NOTIFICATION_TO, EXTRA_NOTIFICATION_TO].filter(Boolean)),
+const DEFAULT_RESERVATION_NOTIFICATION_TO =
+  "rinakorca7@gmail.com,burimmusa33@gmail.com";
+const RESERVATION_NOTIFICATION_TO = envValue(
+  process.env.RESERVATION_NOTIFICATION_TO ||
+    [process.env.RESERVATION_ADMIN_EMAIL, DEFAULT_RESERVATION_NOTIFICATION_TO]
+      .filter(Boolean)
+      .join(","),
+  DEFAULT_RESERVATION_NOTIFICATION_TO,
+);
+const CONTACT_NOTIFICATION_TO = envValue(
+  process.env.CONTACT_NOTIFICATION_TO || process.env.NOTIFICATION_TO,
+  "burimmusa33@gmail.com",
+);
+const SES_REGION = envValue(
+  process.env.AWS_SES_REGION ||
+    process.env.AWS_REGION ||
+    process.env.AWS_DEFAULT_REGION,
+  "eu-central-1",
+);
+const RESTAURANT_PHONE = envValue(
+  process.env.RESTAURANT_PHONE,
+  "+49 30 711 36 44",
+);
+const RESTAURANT_CONTACT_EMAIL = envValue(
+  process.env.RESTAURANT_CONTACT_EMAIL,
+  "burimmusa33@gmail.com",
 );
 
-let resend: Resend | null = null;
+class EmailConfigurationError extends Error {}
 
-const getResend = () => {
-  if (!process.env.RESEND_API_KEY) {
-    throw new Error("RESEND_API_KEY is not configured.");
+class EmailDeliveryError extends Error {
+  failures: string[];
+
+  constructor(failures: string[]) {
+    super("One or more emails could not be sent.");
+    this.failures = failures;
+  }
+}
+
+let sesClient: SESv2Client | null = null;
+
+const getSesClient = () => {
+  if (!sesClient) {
+    sesClient = new SESv2Client({ region: SES_REGION });
   }
 
-  if (!resend) {
-    resend = new Resend(process.env.RESEND_API_KEY);
+  return sesClient;
+};
+
+const getEmailFrom = () => {
+  const emailFrom =
+    process.env.EMAIL_FROM?.trim() ||
+    "Carpe Diem <noreply@restaurant-carpe-diem.de>";
+
+  if (!emailFrom) {
+    throw new EmailConfigurationError("EMAIL_FROM is not configured.");
   }
 
-  return resend;
+  return emailFrom;
 };
 
-type EmailRequest = {
-  type:
-    | "reservation"
-    | "contact"
-    | "reservation_confirmation"
-    | "reservation_received"
-    | "contact_received";
-  payload: {
-    name: string;
-    email: string;
-    phone?: string;
-    date?: string;
-    time?: string;
-    guests?: number;
-    specialRequests?: string;
-    subject?: string;
-    message?: string;
-    status?: string;
-  };
+const getConfiguredRecipient = (value: string, envName: string) => {
+  const email = value.trim();
+
+  if (!SIMPLE_EMAIL_PATTERN.test(email)) {
+    throw new EmailConfigurationError(`${envName} is not a valid email.`);
+  }
+
+  return email;
 };
+
+const getConfiguredRecipients = (value: string, envName: string) => {
+  const emails = value
+    .split(",")
+    .map((email) => email.trim())
+    .filter(Boolean);
+
+  if (emails.length === 0) {
+    throw new EmailConfigurationError(`${envName} is not configured.`);
+  }
+
+  for (const email of emails) {
+    if (!SIMPLE_EMAIL_PATTERN.test(email)) {
+      throw new EmailConfigurationError(`${envName} contains an invalid email.`);
+    }
+  }
+
+  return Array.from(new Set(emails));
+};
+
+const extractEmailAddress = (value: string) =>
+  value.match(/<([^<>@\s]+@[^<>@\s]+\.[^<>@\s]+)>/)?.[1] ||
+  value.match(/^[^<>\s@]+@[^<>\s@]+\.[^<>\s@]+$/)?.[0] ||
+  null;
+
+const getReservationNotificationEmails = () =>
+  getConfiguredRecipients(
+    RESERVATION_NOTIFICATION_TO,
+    "RESERVATION_NOTIFICATION_TO",
+  );
+
+const getContactNotificationEmail = () =>
+  getConfiguredRecipient(CONTACT_NOTIFICATION_TO, "CONTACT_NOTIFICATION_TO");
+
+const getReplyToEmail = () => {
+  const explicitReplyTo = process.env.EMAIL_REPLY_TO?.trim();
+
+  if (explicitReplyTo) {
+    return getConfiguredRecipient(explicitReplyTo, "EMAIL_REPLY_TO");
+  }
+
+  if (RESTAURANT_CONTACT_EMAIL) {
+    return getConfiguredRecipient(
+      RESTAURANT_CONTACT_EMAIL,
+      "RESTAURANT_CONTACT_EMAIL",
+    );
+  }
+
+  const senderEmail = extractEmailAddress(getEmailFrom());
+  return senderEmail
+    ? getConfiguredRecipient(senderEmail, "EMAIL_FROM")
+    : undefined;
+};
+
+const trimmedString = (field: string, maxLength = 200) =>
+  z
+    .string({ required_error: `${field} fehlt.` })
+    .trim()
+    .min(1, `${field} fehlt.`)
+    .max(maxLength, `${field} ist zu lang.`);
+
+const optionalTrimmedString = (maxLength = 2000) =>
+  z.preprocess((value) => {
+    if (typeof value !== "string") {
+      return value;
+    }
+
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : undefined;
+  }, z.string().max(maxLength, "Der Text ist zu lang.").optional());
+
+const emailAddressSchema = z
+  .string({ required_error: "E-Mail fehlt." })
+  .trim()
+  .email("Bitte eine gültige E-Mail-Adresse eingeben.")
+  .max(254, "Die E-Mail-Adresse ist zu lang.");
+
+const dateSchema = z
+  .string({ required_error: "Datum fehlt." })
+  .trim()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, "Bitte ein gültiges Datum eingeben.")
+  .refine((value) => {
+    const [year, month, day] = value.split("-").map(Number);
+    const parsed = new Date(Date.UTC(year, month - 1, day));
+
+    return (
+      parsed.getUTCFullYear() === year &&
+      parsed.getUTCMonth() === month - 1 &&
+      parsed.getUTCDate() === day
+    );
+  }, "Bitte ein gültiges Datum eingeben.");
+
+const timeSchema = z
+  .string({ required_error: "Uhrzeit fehlt." })
+  .trim()
+  .regex(
+    /^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/,
+    "Bitte eine gültige Uhrzeit eingeben.",
+  );
+
+const reservationBasePayloadSchema = z.object({
+  reservationId: optionalTrimmedString(120),
+  name: trimmedString("Name", 120),
+  email: emailAddressSchema,
+  phone: trimmedString("Telefon", 60),
+  date: dateSchema,
+  time: timeSchema,
+  guests: z.coerce
+    .number({ required_error: "Anzahl der Gäste fehlt." })
+    .int("Bitte eine gültige Anzahl an Gästen eingeben.")
+    .min(1, "Bitte eine gültige Anzahl an Gästen eingeben.")
+    .max(200, "Bitte rufen Sie uns für sehr große Gruppen direkt an."),
+  specialRequests: optionalTrimmedString(2000),
+});
+
+const reservationStatusPayloadSchema = reservationBasePayloadSchema
+  .omit({ phone: true })
+  .extend({
+    phone: optionalTrimmedString(60),
+    status: z.enum(["pending", "confirmed", "cancelled"]).optional(),
+  });
+
+const contactPayloadSchema = z.object({
+  name: trimmedString("Name", 120),
+  email: emailAddressSchema,
+  phone: optionalTrimmedString(60),
+  subject: trimmedString("Betreff", 160),
+  message: trimmedString("Nachricht", 3000),
+});
+
+const emailRequestSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("reservation_request"),
+    payload: reservationBasePayloadSchema,
+  }),
+  z.object({
+    type: z.literal("reservation"),
+    payload: reservationBasePayloadSchema,
+  }),
+  z.object({
+    type: z.literal("reservation_received"),
+    payload: reservationBasePayloadSchema,
+  }),
+  z.object({
+    type: z.literal("reservation_confirmation"),
+    payload: reservationStatusPayloadSchema,
+  }),
+  z.object({
+    type: z.literal("contact"),
+    payload: contactPayloadSchema,
+  }),
+  z.object({
+    type: z.literal("contact_received"),
+    payload: contactPayloadSchema,
+  }),
+]);
+
+type ReservationPayload = z.infer<typeof reservationBasePayloadSchema>;
+type ReservationStatusPayload = z.infer<typeof reservationStatusPayloadSchema>;
+type ContactPayload = z.infer<typeof contactPayloadSchema>;
+
+type EmailContent = {
+  subject: string;
+  text: string;
+  html: string;
+};
+
+type EmailMessage = EmailContent & {
+  to: string | string[];
+  replyTo?: string | string[];
+};
+
+type DetailRow = [string, string | number | undefined];
 
 const formatTimeLabel = (time?: string) => {
   if (!time) {
@@ -63,7 +266,8 @@ const formatDateTime = (date?: string, time?: string) => {
     return "";
   }
 
-  const dateObject = new Date(date);
+  const [year, month, day] = date.split("-").map(Number);
+  const dateObject = new Date(Date.UTC(year, month - 1, day, 12));
   const dateLabel = new Intl.DateTimeFormat("de-DE", {
     day: "2-digit",
     month: "long",
@@ -75,26 +279,107 @@ const formatDateTime = (date?: string, time?: string) => {
   return timeLabel ? `${dateLabel} um ${timeLabel} Uhr` : dateLabel;
 };
 
-const buildReservationEmail = (payload: EmailRequest["payload"]) => ({
-  subject: `Neue Reservierung - ${payload.name}`,
-  body: `
-Neue Reservierung eingegangen
------------------------------
-Name: ${payload.name}
-E-Mail: ${payload.email}
-Telefon: ${payload.phone || "-"}
-Datum: ${formatDateTime(payload.date, payload.time)}
-Anzahl Gäste: ${payload.guests}
-Besondere Wünsche: ${payload.specialRequests || "-"}
+const formatGuestCount = (
+  guests: number,
+  specialRequests?: string,
+  includeNoun = true,
+) => {
+  if (
+    guests === 10 &&
+    specialRequests &&
+    /mehr als 10|große gruppe/i.test(specialRequests)
+  ) {
+    return "Mehr als 10 Personen";
+  }
 
-Mit freundlichen Grüßen,
-Carpe Diem System
-  `.trim(),
-});
+  if (!includeNoun) {
+    return String(guests);
+  }
 
-const buildContactEmail = (payload: EmailRequest["payload"]) => ({
+  return `${guests} ${guests === 1 ? "Person" : "Personen"}`;
+};
+
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+
+const nl2br = (value: string) => escapeHtml(value).replace(/\n/g, "<br />");
+
+const buildDetailsText = (rows: DetailRow[]) =>
+  rows
+    .map(([label, value]) => `${label}: ${value === undefined || value === "" ? "-" : value}`)
+    .join("\n");
+
+const buildDetailsHtml = (rows: DetailRow[]) => `
+  <table role="presentation" style="width:100%;border-collapse:collapse;margin:20px 0;">
+    <tbody>
+      ${rows
+        .map(
+          ([label, value]) => `
+            <tr>
+              <td style="padding:8px 0;color:#6b5f58;font-weight:600;width:150px;vertical-align:top;">${escapeHtml(label)}</td>
+              <td style="padding:8px 0;color:#2f2623;vertical-align:top;">${
+                value === undefined || value === "" ? "-" : nl2br(String(value))
+              }</td>
+            </tr>
+          `,
+        )
+        .join("")}
+    </tbody>
+  </table>
+`;
+
+const wrapEmailHtml = (title: string, body: string) => `
+  <div style="margin:0;padding:0;background:#f8f3ea;">
+    <div style="max-width:640px;margin:0 auto;padding:28px 18px;font-family:Arial,Helvetica,sans-serif;color:#2f2623;">
+      <div style="background:#fffaf2;border:1px solid #e4d5c3;border-radius:8px;padding:28px;">
+        <p style="margin:0 0 8px;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:#9b442f;">Carpe Diem</p>
+        <h1 style="margin:0 0 18px;font-family:Georgia,serif;font-size:28px;line-height:1.2;color:#6f1d2c;">${escapeHtml(title)}</h1>
+        ${body}
+      </div>
+    </div>
+  </div>
+`;
+
+const buildReservationRows = (payload: ReservationPayload): DetailRow[] => [
+  ["Name", payload.name],
+  ["E-Mail", payload.email],
+  ["Telefon", payload.phone],
+  ["Datum und Uhrzeit", formatDateTime(payload.date, payload.time)],
+  ["Gäste", formatGuestCount(payload.guests, payload.specialRequests)],
+  ["Besondere Wünsche", payload.specialRequests],
+  ["Reservierungs-ID", payload.reservationId],
+];
+
+const buildReservationEmail = (payload: ReservationPayload): EmailContent => {
+  const rows = buildReservationRows(payload);
+
+  return {
+    subject: `Neue Reservierungsanfrage: ${payload.name}`,
+    text: `
+Neue Reservierungsanfrage eingegangen
+-------------------------------------
+${buildDetailsText(rows)}
+
+Bitte prüfen und bestätigen.
+    `.trim(),
+    html: wrapEmailHtml(
+      "Neue Reservierungsanfrage",
+      `
+        <p style="margin:0 0 14px;line-height:1.55;">Eine neue Reservierungsanfrage ist über die Website eingegangen.</p>
+        ${buildDetailsHtml(rows)}
+        <p style="margin:20px 0 0;line-height:1.55;">Bitte prüfen und bestätigen.</p>
+      `,
+    ),
+  };
+};
+
+const buildContactEmail = (payload: ContactPayload): EmailContent => ({
   subject: `Kontaktanfrage: ${payload.subject}`,
-  body: `
+  text: `
 Kontaktformular Nachricht
 -------------------------
 Name: ${payload.name}
@@ -108,68 +393,122 @@ ${payload.message}
 Mit freundlichen Grüßen,
 Carpe Diem System
   `.trim(),
+  html: wrapEmailHtml(
+    "Neue Kontaktanfrage",
+    `
+      ${buildDetailsHtml([
+        ["Name", payload.name],
+        ["E-Mail", payload.email],
+        ["Telefon", payload.phone],
+        ["Betreff", payload.subject],
+        ["Nachricht", payload.message],
+      ])}
+    `,
+  ),
 });
 
-const buildConfirmationEmail = (payload: EmailRequest["payload"]) => {
+const buildConfirmationEmail = (
+  payload: ReservationStatusPayload,
+): EmailContent => {
   const statusText =
     payload.status === "confirmed"
       ? "bestätigt"
       : payload.status === "cancelled"
         ? "storniert"
         : "aktualisiert";
+  const rows: DetailRow[] = [
+    ["Datum und Uhrzeit", formatDateTime(payload.date, payload.time)],
+    ["Gäste", formatGuestCount(payload.guests, payload.specialRequests)],
+    ["Besondere Wünsche", payload.specialRequests],
+  ];
 
   return {
     subject: `Ihre Reservierung wurde ${statusText} - Carpe Diem`,
-    body: `
+    text: `
 Liebe/r ${payload.name},
 
 Ihre Reservierung wurde ${statusText}.
 
 Reservierungsdetails:
 ---------------------
-Datum: ${formatDateTime(payload.date, payload.time)}
-Anzahl Gäste: ${payload.guests}
-${payload.specialRequests ? `Besondere Wünsche: ${payload.specialRequests}` : ""}
+${buildDetailsText(rows)}
 
-${payload.status === "confirmed"
-  ? "Wir freuen uns, Sie bei uns zu begrüßen!"
-  : payload.status === "cancelled"
-    ? "Falls Sie Fragen haben, kontaktieren Sie uns gerne."
-    : ""}
+${payload.status === "confirmed" ? "Wir freuen uns, Sie bei uns zu begrüßen!" : ""}
+${payload.status === "cancelled" ? "Falls Sie Fragen haben, kontaktieren Sie uns gerne." : ""}
 
 Mit freundlichen Grüßen,
 Ihr Carpe Diem Team
     `.trim(),
+    html: wrapEmailHtml(
+      `Ihre Reservierung wurde ${statusText}`,
+      `
+        <p style="margin:0 0 14px;line-height:1.55;">Liebe/r ${escapeHtml(payload.name)},</p>
+        <p style="margin:0 0 14px;line-height:1.55;">Ihre Reservierung wurde ${escapeHtml(statusText)}.</p>
+        ${buildDetailsHtml(rows)}
+        ${
+          payload.status === "confirmed"
+            ? '<p style="margin:20px 0 0;line-height:1.55;">Wir freuen uns, Sie bei uns zu begrüßen.</p>'
+            : ""
+        }
+        ${
+          payload.status === "cancelled"
+            ? '<p style="margin:20px 0 0;line-height:1.55;">Falls Sie Fragen haben, kontaktieren Sie uns gerne.</p>'
+            : ""
+        }
+        <p style="margin:24px 0 0;line-height:1.55;">Mit freundlichen Grüßen<br />Ihr Carpe Diem Team</p>
+      `,
+    ),
   };
 };
 
-const buildReservationReceivedEmail = (payload: EmailRequest["payload"]) => ({
-  subject: "Reservierungsanfrage erhalten - Carpe Diem",
-  body: `
+const buildReservationReceivedEmail = (
+  payload: ReservationPayload,
+): EmailContent => {
+  const rows: DetailRow[] = [
+    ["Name", payload.name],
+    ["Telefon", payload.phone],
+    ["Datum und Uhrzeit", formatDateTime(payload.date, payload.time)],
+    ["Gäste", formatGuestCount(payload.guests, payload.specialRequests)],
+    ["Besondere Wünsche", payload.specialRequests],
+  ];
+
+  return {
+    subject: "Ihre Reservierungsanfrage ist eingegangen - Carpe Diem",
+    text: `
 Liebe/r ${payload.name},
 
 vielen Dank für Ihre Reservierungsanfrage bei Carpe Diem!
 
 Wir haben folgende Anfrage erhalten:
 ------------------------------------
-Datum: ${formatDateTime(payload.date, payload.time)}
-Anzahl Gäste: ${payload.guests}
-${payload.specialRequests ? `Besondere Wünsche: ${payload.specialRequests}` : ""}
+${buildDetailsText(rows)}
 
-Wir werden Ihre Anfrage schnellstmöglich bearbeiten und uns bei Ihnen melden.
+Ihre Reservierung ist noch nicht endgültig bestätigt. Wir prüfen die Anfrage und melden uns schnellstmöglich bei Ihnen.
 
 Bei Fragen erreichen Sie uns unter:
 Telefon: ${RESTAURANT_PHONE}
-E-Mail: ${NOTIFICATION_TO}
+E-Mail: ${RESTAURANT_CONTACT_EMAIL}
 
 Mit freundlichen Grüßen,
 Ihr Carpe Diem Team
-  `.trim(),
-});
+    `.trim(),
+    html: wrapEmailHtml(
+      "Reservierungsanfrage eingegangen",
+      `
+        <p style="margin:0 0 14px;line-height:1.55;">Liebe/r ${escapeHtml(payload.name)},</p>
+        <p style="margin:0 0 14px;line-height:1.55;">vielen Dank für Ihre Reservierungsanfrage bei Carpe Diem.</p>
+        ${buildDetailsHtml(rows)}
+        <p style="margin:20px 0 0;line-height:1.55;"><strong>Ihre Reservierung ist noch nicht endgültig bestätigt.</strong> Wir prüfen die Anfrage und melden uns schnellstmöglich bei Ihnen.</p>
+        <p style="margin:20px 0 0;line-height:1.55;">Bei Fragen erreichen Sie uns unter ${escapeHtml(RESTAURANT_PHONE)} oder ${escapeHtml(RESTAURANT_CONTACT_EMAIL)}.</p>
+        <p style="margin:24px 0 0;line-height:1.55;">Mit freundlichen Grüßen<br />Ihr Carpe Diem Team</p>
+      `,
+    ),
+  };
+};
 
-const buildContactReceivedEmail = (payload: EmailRequest["payload"]) => ({
+const buildContactReceivedEmail = (payload: ContactPayload): EmailContent => ({
   subject: "Ihre Nachricht wurde empfangen - Carpe Diem",
-  body: `
+  text: `
 Liebe/r ${payload.name},
 
 vielen Dank für Ihre Nachricht!
@@ -186,80 +525,218 @@ Wir werden uns schnellstmöglich bei Ihnen melden.
 Mit freundlichen Grüßen,
 Ihr Carpe Diem Team
   `.trim(),
+  html: wrapEmailHtml(
+    "Nachricht eingegangen",
+    `
+      <p style="margin:0 0 14px;line-height:1.55;">Liebe/r ${escapeHtml(payload.name)},</p>
+      <p style="margin:0 0 14px;line-height:1.55;">vielen Dank für Ihre Nachricht. Wir werden uns schnellstmöglich bei Ihnen melden.</p>
+      ${buildDetailsHtml([
+        ["Betreff", payload.subject],
+        ["Nachricht", payload.message],
+      ])}
+      <p style="margin:24px 0 0;line-height:1.55;">Mit freundlichen Grüßen<br />Ihr Carpe Diem Team</p>
+    `,
+  ),
 });
+
+const toAddressList = (value: string | string[]) =>
+  Array.isArray(value) ? value : [value];
+
+const sendEmail = async (message: EmailMessage, label: string) => {
+  try {
+    const result = await getSesClient().send(
+      new SendEmailCommand({
+        FromEmailAddress: getEmailFrom(),
+        Destination: {
+          ToAddresses: toAddressList(message.to),
+        },
+        ReplyToAddresses: message.replyTo
+          ? toAddressList(message.replyTo)
+          : undefined,
+        Content: {
+          Simple: {
+            Subject: {
+              Data: message.subject,
+              Charset: "UTF-8",
+            },
+            Body: {
+              Text: {
+                Data: message.text,
+                Charset: "UTF-8",
+              },
+              Html: {
+                Data: message.html,
+                Charset: "UTF-8",
+              },
+            },
+          },
+        },
+      }),
+    );
+
+    return { id: result.MessageId };
+  } catch (error) {
+    console.error("SES email send failed:", {
+      label,
+      error,
+    });
+
+    throw error instanceof Error
+      ? error
+      : new Error("SES email send failed.");
+  }
+};
+
+const sendReservationRequestEmails = async (payload: ReservationPayload) => {
+  const adminEmail = buildReservationEmail(payload);
+  const customerEmail = buildReservationReceivedEmail(payload);
+  const messages = [
+    {
+      label: "reservation-admin",
+      promise: sendEmail(
+        {
+          ...adminEmail,
+          to: getReservationNotificationEmails(),
+          replyTo: payload.email,
+        },
+        "reservation-admin",
+      ),
+    },
+    {
+      label: "reservation-customer",
+      promise: sendEmail(
+        {
+          ...customerEmail,
+          to: payload.email,
+          replyTo: getReplyToEmail(),
+        },
+        "reservation-customer",
+      ),
+    },
+  ];
+
+  const results = await Promise.allSettled(
+    messages.map((message) => message.promise),
+  );
+  const failures = results
+    .map((result, index) =>
+      result.status === "rejected" ? messages[index].label : null,
+    )
+    .filter((label): label is string => Boolean(label));
+
+  if (failures.length > 0) {
+    throw new EmailDeliveryError(failures);
+  }
+
+  return {
+    adminEmailId:
+      results[0].status === "fulfilled" ? results[0].value?.id : undefined,
+    customerEmailId:
+      results[1].status === "fulfilled" ? results[1].value?.id : undefined,
+  };
+};
+
+const validationMessage = (error: z.ZodError) =>
+  error.issues.map((issue) => issue.message).join(" ");
 
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    const body = (await request.json()) as EmailRequest;
-    const { type, payload } = body;
+    const body = await request.json();
+    const { type, payload } = emailRequestSchema.parse(body);
 
-    if (!type || !payload) {
-      return NextResponse.json(
-        { error: "Missing type or payload" },
-        { status: 400 },
-      );
+    if (type === "reservation_request") {
+      const result = await sendReservationRequestEmails(payload);
+      return NextResponse.json({ success: true, type, ...result });
     }
 
-    let emailContent: { subject: string; body: string };
+    let emailContent: EmailContent;
     let recipient: string | string[];
     let replyTo: string | undefined;
 
     switch (type) {
       case "reservation":
         emailContent = buildReservationEmail(payload);
-        recipient = notificationRecipients;
+        recipient = getReservationNotificationEmails();
         replyTo = payload.email;
         break;
       case "contact":
         emailContent = buildContactEmail(payload);
-        recipient = NOTIFICATION_TO;
+        recipient = getContactNotificationEmail();
         replyTo = payload.email;
         break;
       case "reservation_confirmation":
         emailContent = buildConfirmationEmail(payload);
         recipient = payload.email;
-        replyTo = NOTIFICATION_TO;
+        replyTo = getReplyToEmail();
         break;
       case "reservation_received":
         emailContent = buildReservationReceivedEmail(payload);
         recipient = payload.email;
-        replyTo = NOTIFICATION_TO;
+        replyTo = getReplyToEmail();
         break;
       case "contact_received":
         emailContent = buildContactReceivedEmail(payload);
         recipient = payload.email;
-        replyTo = NOTIFICATION_TO;
+        replyTo = getReplyToEmail();
         break;
       default:
-        return NextResponse.json(
-          { error: `Unknown email type: ${type}` },
-          { status: 400 },
-        );
+        const exhaustiveCheck: never = type;
+        void exhaustiveCheck;
+        throw new Error("Unknown email type.");
     }
 
-    const { error } = await getResend().emails.send({
-      from: EMAIL_FROM,
+    const result = await sendEmail(
+      {
+        ...emailContent,
+        to: recipient,
+        replyTo,
+      },
+      type,
+    );
+
+    return NextResponse.json({
+      success: true,
+      type,
       to: recipient,
-      replyTo,
-      subject: emailContent.subject,
-      text: emailContent.body,
+      emailId: result?.id,
     });
-
-    if (error) {
-      console.error("Resend error:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ success: true, type, recipient });
   } catch (sendError) {
     console.error("Email send error:", sendError);
+
+    if (sendError instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: validationMessage(sendError) || "Ungültige Anfrage." },
+        { status: 400 },
+      );
+    }
+
+    if (sendError instanceof EmailConfigurationError) {
+      return NextResponse.json(
+        {
+          error:
+            "Der E-Mail-Versand ist nicht vollständig konfiguriert. Bitte prüfen Sie EMAIL_FROM, AWS_SES_REGION und die SES-Berechtigungen.",
+        },
+        { status: 500 },
+      );
+    }
+
+    if (sendError instanceof EmailDeliveryError) {
+      return NextResponse.json(
+        {
+          error:
+            "Die E-Mail-Benachrichtigung konnte nicht vollständig versendet werden. Bitte rufen Sie uns unter 030 711 36 44 an.",
+          failedEmails: sendError.failures,
+        },
+        { status: 502 },
+      );
+    }
 
     return NextResponse.json(
       {
         error:
           sendError instanceof Error
             ? sendError.message
-            : "Failed to send email",
+            : "Die E-Mail konnte nicht versendet werden.",
       },
       { status: 500 },
     );
