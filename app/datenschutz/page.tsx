@@ -1,10 +1,14 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { ChevronLeft } from "lucide-react"
+import { createMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "Datenschutz | Carpe Diem",
-  description: "Datenschutzerklärung von Carpe Diem Ristorante",
-}
+export const metadata: Metadata = createMetadata({
+  title: "Datenschutz",
+  description:
+    "Datenschutzerklärung des Carpe Diem Ristorante in Berlin-Lichterfelde.",
+  path: "/datenschutz",
+})
 
 export default function Datenschutz() {
   return (

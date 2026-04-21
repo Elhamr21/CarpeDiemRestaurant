@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from 'next'
 import { Cormorant_Garamond, Source_Sans_3 } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { GoogleAnalytics } from '@/components/google-analytics'
+import { RestaurantJsonLd } from '@/components/restaurant-json-ld'
+import { siteConfig } from '@/lib/seo'
 import './globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -18,15 +21,56 @@ const sourceSans = Source_Sans_3({
 })
 
 export const metadata: Metadata = {
-  title: 'Carpe Diem | Ristorante Italiano',
-  description: 'Authentische italienische Küche in Berlin-Lichterfelde. Genießen Sie hausgemachte Pasta, traditionelle Pizza und erlesene Weine in warmherziger Atmosphäre.',
-  keywords: ['italienisches Restaurant Berlin', ' Lichterfelde', 'Carpe Diem', 'italienische Küche', 'Ristorante'],
-  authors: [{ name: 'Carpe Diem Ristorante' }],
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.shortName}`,
+  },
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  applicationName: siteConfig.shortName,
+  authors: [{ name: siteConfig.name }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    icon: [
+      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
+      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/apple-icon.png',
+  },
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? {
+        verification: {
+          google: process.env.GOOGLE_SITE_VERIFICATION,
+        },
+      }
+    : {}),
   openGraph: {
-    title: 'Carpe Diem | Ristorante Italiano',
-    description: 'Authentische italienische Küche in Berlin-Lichterfelde',
-    locale: 'de_DE',
+    title: siteConfig.title,
+    description: siteConfig.description,
+    url: '/',
+    siteName: siteConfig.name,
+    locale: siteConfig.locale,
     type: 'website',
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1294,
+        height: 810,
+        alt: siteConfig.ogImageAlt,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
   },
 }
 
@@ -44,7 +88,9 @@ export default function RootLayout({
   return (
     <html lang="de" className={`${cormorant.variable} ${sourceSans.variable}`}>
       <body className="font-sans antialiased">
+        <RestaurantJsonLd />
         {children}
+        <GoogleAnalytics />
         <Analytics />
       </body>
     </html>

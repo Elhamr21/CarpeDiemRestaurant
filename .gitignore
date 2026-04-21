@@ -9,12 +9,13 @@ next.user-config.*
 
 # Environment variables
 .env*.local
-.env.production
+# .env.production is intentionally committed with public build-time defaults only.
 
 # Common ignores
 node_modules
 .next/
 .DS_Store
+*:Zone.Identifier
 .amplify/
 amplify/.ampx/
 amplify_outputs.json

@@ -49,9 +49,11 @@ frontend:
             echo "pnpm-lock.yaml not found; continuing with a non-frozen install for this build."
             pnpm install --no-frozen-lockfile
           fi
-        # Create .env.production with email config from Amplify environment variables
+        # Create .env.production with public site config and email config from Amplify environment variables.
         - |
           cat > .env.production << EOF
+          SITE_URL=https://restaurant-carpe-diem.de
+          NEXT_PUBLIC_GA_ID=G-K6NB5FTD9H
           AWS_SES_REGION=${AWS_SES_REGION:-${AWS_REGION:-eu-central-1}}
           EMAIL_FROM=${EMAIL_FROM:-Carpe Diem <noreply@restaurant-carpe-diem.de>}
           RESERVATION_NOTIFICATION_TO=${RESERVATION_NOTIFICATION_TO:-rinakorca7@gmail.com,burimmusa33@gmail.com}
@@ -62,7 +64,7 @@ frontend:
           EOF
     build:
       commands:
-        - pnpm run build
+        - SITE_URL=https://restaurant-carpe-diem.de NEXT_PUBLIC_GA_ID=G-K6NB5FTD9H pnpm run build
   artifacts:
     baseDirectory: .next
     files:

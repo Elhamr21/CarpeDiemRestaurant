@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Navigation } from "@/components/navigation";
 import { Hero } from "@/components/hero";
 import { OurStory } from "@/components/our-story";
@@ -7,6 +8,11 @@ import { TestimonialsSection } from "@/components/testimonials-section";
 import { GallerySection } from "@/components/gallery-section";
 import { ReservationSection } from "@/components/reservation-section";
 import { Footer } from "@/components/footer";
+import { createMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = createMetadata({
+  path: "/",
+});
 
 export default function HomePage() {
   return (
