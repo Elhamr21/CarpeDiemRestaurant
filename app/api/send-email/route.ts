@@ -9,8 +9,9 @@ const envValue = (value: string | undefined, fallback: string) =>
   value?.trim() || fallback;
 const SIMPLE_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const DEFAULT_RESTAURANT_EMAIL = "info@restaurant-carpe-diem.de";
 const DEFAULT_RESERVATION_NOTIFICATION_TO =
-  "rinakorca7@gmail.com,burimmusa33@gmail.com";
+  DEFAULT_RESTAURANT_EMAIL;
 const RESERVATION_NOTIFICATION_TO = envValue(
   process.env.RESERVATION_NOTIFICATION_TO ||
     [process.env.RESERVATION_ADMIN_EMAIL, DEFAULT_RESERVATION_NOTIFICATION_TO]
@@ -20,7 +21,7 @@ const RESERVATION_NOTIFICATION_TO = envValue(
 );
 const CONTACT_NOTIFICATION_TO = envValue(
   process.env.CONTACT_NOTIFICATION_TO || process.env.NOTIFICATION_TO,
-  "burimmusa33@gmail.com",
+  DEFAULT_RESTAURANT_EMAIL,
 );
 const SES_REGION = envValue(
   process.env.AWS_SES_REGION ||
@@ -34,19 +35,12 @@ const RESTAURANT_PHONE = envValue(
 );
 const RESTAURANT_CONTACT_EMAIL = envValue(
   process.env.RESTAURANT_CONTACT_EMAIL,
-  "burimmusa33@gmail.com",
+  DEFAULT_RESTAURANT_EMAIL,
 );
 
 class EmailConfigurationError extends Error {}
 
-class EmailDeliveryError extends Error {
-  failures: string[];
-
-  constructor(failures: string[]) {
-    super("One or more emails could not be sent.");
-    this.failures = failures;
-  }
-}
+type EmailDeliveryStatus = "sent" | "partial" | "failed";
 
 let sesClient: SESv2Client | null = null;
 
@@ -358,20 +352,20 @@ const buildReservationEmail = (payload: ReservationPayload): EmailContent => {
   const rows = buildReservationRows(payload);
 
   return {
-    subject: `Neue Reservierungsanfrage: ${payload.name}`,
+    subject: `Neue Online-Reservierung: ${payload.name}`,
     text: `
-Neue Reservierungsanfrage eingegangen
--------------------------------------
+Neue Online-Reservierung eingegangen
+------------------------------------
 ${buildDetailsText(rows)}
 
-Bitte prüfen und bestätigen.
+Diese Reservierung wurde automatisch bestätigt.
     `.trim(),
     html: wrapEmailHtml(
-      "Neue Reservierungsanfrage",
+      "Neue Online-Reservierung",
       `
-        <p style="margin:0 0 14px;line-height:1.55;">Eine neue Reservierungsanfrage ist über die Website eingegangen.</p>
+        <p style="margin:0 0 14px;line-height:1.55;">Eine neue Online-Reservierung ist über die Website eingegangen.</p>
         ${buildDetailsHtml(rows)}
-        <p style="margin:20px 0 0;line-height:1.55;">Bitte prüfen und bestätigen.</p>
+        <p style="margin:20px 0 0;line-height:1.55;">Diese Reservierung wurde automatisch bestätigt.</p>
       `,
     ),
   };
@@ -544,11 +538,12 @@ const toAddressList = (value: string | string[]) =>
 
 const sendEmail = async (message: EmailMessage, label: string) => {
   try {
+    const recipients = toAddressList(message.to);
     const result = await getSesClient().send(
       new SendEmailCommand({
         FromEmailAddress: getEmailFrom(),
         Destination: {
-          ToAddresses: toAddressList(message.to),
+          ToAddresses: recipients,
         },
         ReplyToAddresses: message.replyTo
           ? toAddressList(message.replyTo)
@@ -574,11 +569,18 @@ const sendEmail = async (message: EmailMessage, label: string) => {
       }),
     );
 
+    console.info("SES email sent:", {
+      label,
+      messageId: result.MessageId,
+      recipientCount: recipients.length,
+    });
+
     return { id: result.MessageId };
   } catch (error) {
     console.error("SES email send failed:", {
       label,
-      error,
+      errorName: error instanceof Error ? error.name : undefined,
+      errorMessage: error instanceof Error ? error.message : String(error),
     });
 
     throw error instanceof Error
@@ -587,9 +589,22 @@ const sendEmail = async (message: EmailMessage, label: string) => {
   }
 };
 
+const getReservationEmailStatus = (
+  failedEmails: string[],
+): EmailDeliveryStatus => {
+  if (failedEmails.length === 0) {
+    return "sent";
+  }
+
+  return failedEmails.length === 2 ? "failed" : "partial";
+};
+
 const sendReservationRequestEmails = async (payload: ReservationPayload) => {
   const adminEmail = buildReservationEmail(payload);
-  const customerEmail = buildReservationReceivedEmail(payload);
+  const customerEmail = buildConfirmationEmail({
+    ...payload,
+    status: "confirmed",
+  });
   const messages = [
     {
       label: "reservation-admin",
@@ -625,10 +640,15 @@ const sendReservationRequestEmails = async (payload: ReservationPayload) => {
     .filter((label): label is string => Boolean(label));
 
   if (failures.length > 0) {
-    throw new EmailDeliveryError(failures);
+    console.error("Reservation email delivery incomplete:", {
+      reservationId: payload.reservationId,
+      failedEmails: failures,
+    });
   }
 
   return {
+    emailDeliveryStatus: getReservationEmailStatus(failures),
+    failedEmails: failures,
     adminEmailId:
       results[0].status === "fulfilled" ? results[0].value?.id : undefined,
     customerEmailId:
@@ -646,7 +666,10 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     if (type === "reservation_request") {
       const result = await sendReservationRequestEmails(payload);
-      return NextResponse.json({ success: true, type, ...result });
+      return NextResponse.json(
+        { success: true, type, ...result },
+        { status: result.emailDeliveryStatus === "sent" ? 200 : 207 },
+      );
     }
 
     let emailContent: EmailContent;
@@ -717,17 +740,6 @@ export async function POST(request: NextRequest): Promise<Response> {
             "Der E-Mail-Versand ist nicht vollständig konfiguriert. Bitte prüfen Sie EMAIL_FROM, AWS_SES_REGION und die SES-Berechtigungen.",
         },
         { status: 500 },
-      );
-    }
-
-    if (sendError instanceof EmailDeliveryError) {
-      return NextResponse.json(
-        {
-          error:
-            "Die E-Mail-Benachrichtigung konnte nicht vollständig versendet werden. Bitte rufen Sie uns unter 030 711 36 44 an.",
-          failedEmails: sendError.failures,
-        },
-        { status: 502 },
       );
     }
 

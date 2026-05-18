@@ -43,7 +43,10 @@ export default function Impressum() {
                 <strong>Telefon:</strong> <a href="tel:+493071136644" className="text-wine hover:text-wine-dark">030 711 36 44</a>
               </p>
               <p>
-                <strong>E-Mail:</strong> <span className="text-cream/50">info@carpediem-berlin.de</span>
+                <strong>E-Mail:</strong>{" "}
+                <a href="mailto:info@restaurant-carpe-diem.de" className="text-wine hover:text-wine-dark">
+                  info@restaurant-carpe-diem.de
+                </a>
               </p>
             </div>
           </section>

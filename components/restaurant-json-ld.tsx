@@ -7,6 +7,7 @@ const restaurantJsonLd = {
   url: siteConfig.url,
   image: absoluteUrl(siteConfig.ogImage),
   telephone: siteConfig.telephone,
+  email: siteConfig.email,
   servesCuisine: ["Italian", "Pizza", "Pasta"],
   priceRange: "$$",
   address: {

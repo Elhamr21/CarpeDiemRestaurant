@@ -43,7 +43,7 @@ const timeSlots = [
 const GENERIC_SUBMIT_ERROR =
   "Fehler beim Absenden der Reservierung. Bitte versuchen Sie es erneut."
 const RESERVATION_EMAIL_ERROR =
-  "Ihre Reservierung wurde gespeichert, aber die E-Mail-Benachrichtigung konnte nicht vollständig versendet werden. Bitte rufen Sie uns unter 030 711 36 44 an."
+  "Ihre Reservierung wurde gespeichert und automatisch bestätigt, aber die E-Mail-Benachrichtigung konnte nicht vollständig versendet werden. Bitte rufen Sie uns unter 030 711 36 44 an."
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const createInitialFormData = () => ({
@@ -68,6 +68,16 @@ const asNonEmptyString = (value: unknown) => {
 const getApiErrorMessage = (value: unknown) => {
   if (typeof value === "object" && value !== null) {
     return asNonEmptyString((value as Record<string, unknown>).error)
+  }
+
+  return null
+}
+
+const getEmailDeliveryStatus = (value: unknown) => {
+  if (typeof value === "object" && value !== null) {
+    return asNonEmptyString(
+      (value as Record<string, unknown>).emailDeliveryStatus,
+    )
   }
 
   return null
@@ -152,6 +162,7 @@ export function ReservationSection() {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState("")
+  const [submitWarning, setSubmitWarning] = useState("")
   const [formData, setFormData] = useState(createInitialFormData)
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -187,6 +198,7 @@ export function ReservationSection() {
     event.preventDefault()
     setIsSubmitting(true)
     setSubmitError("")
+    setSubmitWarning("")
 
     try {
       const client = await getDataClient()
@@ -243,7 +255,7 @@ export function ReservationSection() {
         time: awsTime,
         guests,
         specialRequests: specialRequests || undefined,
-        status: "pending",
+        status: "confirmed",
       })
 
       if (errors?.length) {
@@ -265,24 +277,36 @@ export function ReservationSection() {
         specialRequests: specialRequests || undefined,
       }
 
-      const emailResponse = await fetch("/api/send-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "reservation_request",
-          payload: emailPayload,
-        }),
-      })
-      const emailResult = await emailResponse.json().catch(() => null)
+      let emailWarning = ""
 
-      if (!emailResponse.ok || !emailResult?.success) {
-        console.error("Reservation email API error:", emailResult)
-        throw new Error(
-          getApiErrorMessage(emailResult) || RESERVATION_EMAIL_ERROR,
-        )
+      try {
+        const emailResponse = await fetch("/api/send-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "reservation_request",
+            payload: emailPayload,
+          }),
+        })
+        const emailResult = await emailResponse.json().catch(() => null)
+        const emailDeliveryStatus = getEmailDeliveryStatus(emailResult)
+
+        if (
+          !emailResponse.ok ||
+          !emailResult?.success ||
+          (emailDeliveryStatus && emailDeliveryStatus !== "sent")
+        ) {
+          console.error("Reservation email API warning:", emailResult)
+          emailWarning =
+            getApiErrorMessage(emailResult) || RESERVATION_EMAIL_ERROR
+        }
+      } catch (emailError) {
+        console.error("Reservation email request failed:", emailError)
+        emailWarning = RESERVATION_EMAIL_ERROR
       }
 
       setFormData(createInitialFormData())
+      setSubmitWarning(emailWarning)
       setIsSubmitted(true)
     } catch (error) {
       console.error("Reservation submit error:", error)
@@ -410,14 +434,20 @@ export function ReservationSection() {
                     Vielen Dank!
                   </h3>
                   <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                    Ihre Reservierungsanfrage wurde erfolgreich übermittelt. Wir
-                    werden uns in Kürze bei Ihnen melden, um Ihre Reservierung zu
-                    bestätigen.
+                    {submitWarning
+                      ? "Ihre Reservierung wurde erfolgreich übermittelt und automatisch bestätigt."
+                      : "Ihre Reservierung wurde erfolgreich übermittelt und automatisch bestätigt. Sie erhalten die Bestätigung per E-Mail."}
                   </p>
+                  {submitWarning && (
+                    <p className="mb-6 rounded-lg border border-terracotta/30 bg-cream px-4 py-3 text-sm text-terracotta-dark">
+                      {submitWarning}
+                    </p>
+                  )}
                   <button
                     onClick={() => {
                       setIsSubmitted(false)
                       setSubmitError("")
+                      setSubmitWarning("")
                       setFormData(createInitialFormData())
                     }}
                     className="text-terracotta hover:text-terracotta-dark transition-colors font-medium"
@@ -432,8 +462,8 @@ export function ReservationSection() {
                       Online Reservierung
                     </h3>
                     <p className="text-muted-foreground text-sm">
-                      Füllen Sie das Formular aus und wir bestätigen Ihre
-                      Reservierung
+                      Füllen Sie das Formular aus und erhalten Sie automatisch
+                      Ihre Bestätigung per E-Mail.
                     </p>
                   </div>
 
