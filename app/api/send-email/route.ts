@@ -9,7 +9,7 @@ const envValue = (value: string | undefined, fallback: string) =>
   value?.trim() || fallback;
 const SIMPLE_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const DEFAULT_RESTAURANT_EMAIL = "info@restaurant-carpe-diem.de";
+const DEFAULT_RESTAURANT_EMAIL = "contact@ristorante-carpediem.de";
 const DEFAULT_RESERVATION_NOTIFICATION_TO =
   DEFAULT_RESTAURANT_EMAIL;
 const RESERVATION_NOTIFICATION_TO = envValue(
@@ -55,7 +55,7 @@ const getSesClient = () => {
 const getEmailFrom = () => {
   const emailFrom =
     process.env.EMAIL_FROM?.trim() ||
-    "Carpe Diem <noreply@restaurant-carpe-diem.de>";
+    "Carpe Diem <contact@ristorante-carpediem.de>";
 
   if (!emailFrom) {
     throw new EmailConfigurationError("EMAIL_FROM is not configured.");

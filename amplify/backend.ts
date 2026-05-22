@@ -20,7 +20,7 @@ const sesPolicy = new PolicyStatement({
   effect: Effect.ALLOW,
   actions: ['ses:SendEmail', 'ses:SendRawEmail'],
   resources: [
-    `arn:aws:ses:${region}:${account}:identity/restaurant-carpe-diem.de`,
+    `arn:aws:ses:${region}:${account}:identity/ristorante-carpediem.de`,
   ],
 });
 

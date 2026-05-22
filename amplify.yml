@@ -52,19 +52,19 @@ frontend:
         # Create .env.production with public site config and email config from Amplify environment variables.
         - |
           cat > .env.production << EOF
-          SITE_URL=https://www.restaurant-carpe-diem.de
+          SITE_URL=https://ristorante-carpediem.de
           NEXT_PUBLIC_GA_ID=G-K6NB5FTD9H
           AWS_SES_REGION=${AWS_SES_REGION:-${AWS_REGION:-eu-central-1}}
-          EMAIL_FROM=${EMAIL_FROM:-Carpe Diem <noreply@restaurant-carpe-diem.de>}
-          RESERVATION_NOTIFICATION_TO=${RESERVATION_NOTIFICATION_TO:-info@restaurant-carpe-diem.de}
-          CONTACT_NOTIFICATION_TO=${CONTACT_NOTIFICATION_TO:-${NOTIFICATION_TO:-info@restaurant-carpe-diem.de}}
-          EMAIL_REPLY_TO=${EMAIL_REPLY_TO:-info@restaurant-carpe-diem.de}
-          RESTAURANT_CONTACT_EMAIL=${RESTAURANT_CONTACT_EMAIL:-info@restaurant-carpe-diem.de}
+          EMAIL_FROM=${EMAIL_FROM:-Carpe Diem <contact@ristorante-carpediem.de>}
+          RESERVATION_NOTIFICATION_TO=${RESERVATION_NOTIFICATION_TO:-contact@ristorante-carpediem.de}
+          CONTACT_NOTIFICATION_TO=${CONTACT_NOTIFICATION_TO:-${NOTIFICATION_TO:-contact@ristorante-carpediem.de}}
+          EMAIL_REPLY_TO=${EMAIL_REPLY_TO:-contact@ristorante-carpediem.de}
+          RESTAURANT_CONTACT_EMAIL=${RESTAURANT_CONTACT_EMAIL:-contact@ristorante-carpediem.de}
           RESTAURANT_PHONE=${RESTAURANT_PHONE:-+49 30 711 36 44}
           EOF
     build:
       commands:
-        - SITE_URL=https://www.restaurant-carpe-diem.de NEXT_PUBLIC_GA_ID=G-K6NB5FTD9H pnpm run build
+        - SITE_URL=https://ristorante-carpediem.de NEXT_PUBLIC_GA_ID=G-K6NB5FTD9H pnpm run build
   artifacts:
     baseDirectory: .next
     files:

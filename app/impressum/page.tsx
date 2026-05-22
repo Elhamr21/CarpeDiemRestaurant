@@ -44,8 +44,8 @@ export default function Impressum() {
               </p>
               <p>
                 <strong>E-Mail:</strong>{" "}
-                <a href="mailto:info@restaurant-carpe-diem.de" className="text-wine hover:text-wine-dark">
-                  info@restaurant-carpe-diem.de
+                <a href="mailto:contact@ristorante-carpediem.de" className="text-wine hover:text-wine-dark">
+                  contact@ristorante-carpediem.de
                 </a>
               </p>
             </div>

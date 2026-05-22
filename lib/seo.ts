@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 const normalizeSiteUrl = (url?: string) => {
-  const fallbackUrl = "https://www.restaurant-carpe-diem.de"
+  const fallbackUrl = "https://ristorante-carpediem.de"
   const value = url?.trim() || fallbackUrl
 
   try {
@@ -24,7 +24,7 @@ export const siteConfig = {
   ogImage: "/photos/cesar.png",
   ogImageAlt: "Carpe Diem Ristorante Logo",
   telephone: "+493071136644",
-  email: "info@restaurant-carpe-diem.de",
+  email: "contact@ristorante-carpediem.de",
   address: {
     streetAddress: "Lichterfelder Ring 129",
     postalCode: "12209",
