@@ -358,14 +358,14 @@ Neue Online-Reservierung eingegangen
 ------------------------------------
 ${buildDetailsText(rows)}
 
-Diese Reservierung wartet auf manuelle Bestätigung im Admin-Bereich.
+Diese Reservierung wurde automatisch bestätigt.
     `.trim(),
     html: wrapEmailHtml(
       "Neue Online-Reservierung",
       `
         <p style="margin:0 0 14px;line-height:1.55;">Eine neue Online-Reservierung ist über die Website eingegangen.</p>
         ${buildDetailsHtml(rows)}
-        <p style="margin:20px 0 0;line-height:1.55;">Diese Reservierung wartet auf manuelle Bestätigung im Admin-Bereich.</p>
+        <p style="margin:20px 0 0;line-height:1.55;">Diese Reservierung wurde automatisch bestätigt.</p>
       `,
     ),
   };
@@ -601,7 +601,10 @@ const getReservationEmailStatus = (
 
 const sendReservationRequestEmails = async (payload: ReservationPayload) => {
   const adminEmail = buildReservationEmail(payload);
-  const customerEmail = buildReservationReceivedEmail(payload);
+  const customerEmail = buildConfirmationEmail({
+    ...payload,
+    status: "confirmed",
+  });
   const messages = [
     {
       label: "reservation-admin",

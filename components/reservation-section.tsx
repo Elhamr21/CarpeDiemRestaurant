@@ -43,7 +43,7 @@ const timeSlots = [
 const GENERIC_SUBMIT_ERROR =
   "Fehler beim Absenden der Reservierung. Bitte versuchen Sie es erneut."
 const RESERVATION_EMAIL_ERROR =
-  "Ihre Reservierungsanfrage wurde gespeichert, aber die E-Mail-Benachrichtigung konnte nicht vollständig versendet werden. Bitte rufen Sie uns unter 030 711 36 44 an."
+  "Ihre Reservierung wurde gespeichert und automatisch bestätigt, aber die E-Mail-Benachrichtigung konnte nicht vollständig versendet werden. Bitte rufen Sie uns unter 030 711 36 44 an."
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const createInitialFormData = () => ({
@@ -255,6 +255,7 @@ export function ReservationSection() {
         time: awsTime,
         guests,
         specialRequests: specialRequests || undefined,
+        status: "confirmed",
       })
 
       if (errors?.length) {
@@ -434,8 +435,8 @@ export function ReservationSection() {
                   </h3>
                   <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                     {submitWarning
-                      ? "Ihre Reservierungsanfrage wurde erfolgreich übermittelt."
-                      : "Ihre Reservierungsanfrage wurde erfolgreich übermittelt. Sie erhalten eine Eingangsbestätigung per E-Mail."}
+                      ? "Ihre Reservierung wurde erfolgreich übermittelt und automatisch bestätigt."
+                      : "Ihre Reservierung wurde erfolgreich übermittelt und automatisch bestätigt. Sie erhalten die Bestätigung per E-Mail."}
                   </p>
                   {submitWarning && (
                     <p className="mb-6 rounded-lg border border-terracotta/30 bg-cream px-4 py-3 text-sm text-terracotta-dark">
