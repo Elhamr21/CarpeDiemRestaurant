@@ -1,0 +1,10 @@
+packages:
+  - "."
+
+onlyBuiltDependencies:
+  - "@parcel/watcher"
+  - esbuild
+  - sharp
+
+ignoredBuiltDependencies:
+  - core-js
