@@ -7,64 +7,70 @@ import { X, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react"
 
 const galleryImages = [
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Restaurant Eingang",
-    title: "Willkommen im Carpe Diem",
-    description: "Unser Eingang mit traditionellem italienischem Charme. Hier beginnt Ihr kulinarisches Erlebnis."
+    src: "/gallery/ambient1.jpeg",
+    alt: "Ambiente - Atmosphäre 1",
+    title: "Ambiente",
+    description: "Die einladende Atmosphäre unseres Restaurants."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Team mit Zitrusfrüchten",
-    title: "Frische Zutaten",
-    description: "Mediterranes Ambiente mit frischen Zitrusfrüchten - ein Stück Italien mitten in Berlin."
+    src: "/gallery/ambient3.jpeg",
+    alt: "Ambiente - Atmosphäre 2",
+    title: "Gemütliche Ecke",
+    description: "Ein Blick in unsere gemütlichen Ecken."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Team am Eingang",
-    title: "Herzlich Willkommen",
-    description: "Unser Team begrüßt Sie herzlich und sorgt für einen unvergesslichen Abend."
+    src: "/gallery/ambient4.jpeg",
+    alt: "Ambiente - Atmosphäre 3",
+    title: "Tisch-Setting",
+    description: "Liebevoll arrangierte Tische für Ihr Essenserlebnis."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Gemütliche Atmosphäre",
-    title: "Gastfreundschaft",
-    description: "Bei uns fühlen Sie sich wie bei Freunden - herzliche italienische Gastfreundschaft."
+    src: "/gallery/ambient5.jpeg",
+    alt: "Ambiente - Atmosphäre 4",
+    title: "Restaurant Ambiente",
+    description: "Die warme und einladende Atmosphäre von Carpe Diem."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Team Gruppenfoto",
+    src: "/gallery/ambient6.jpeg",
+    alt: "Ambiente - Atmosphäre 5",
+    title: "Inneneinrichtung",
+    description: "Details unserer wunderschönen Inneneinrichtung."
+  },
+  {
+    src: "/gallery/ambient7.jpeg",
+    alt: "Ambiente - Atmosphäre 6",
+    title: "Restaurant Details",
+    description: "Die liebevollen Details, die unser Restaurant besonders machen."
+  },
+  {
+    src: "/gallery/carpediem.jpeg",
+    alt: "Carpe Diem",
+    title: "Carpe Diem Restaurant",
+    description: "Unser Restaurant - ein Ort für unvergessliche Momente."
+  },
+  {
+    src: "/gallery/collegue.jpeg",
+    alt: "Kollegen",
     title: "Unser Team",
-    description: "Mit Leidenschaft und Hingabe servieren wir Ihnen authentische italienische Küche."
+    description: "Unser leidenschaftliches Team, das Ihnen herzlich willkommen heißt."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Küchen Team",
-    title: "Das Carpe Diem Team",
-    description: "Unser engagiertes Team sorgt täglich für kulinarische Höhepunkte."
+    src: "/gallery/food.jpeg",
+    alt: "Leckeres Essen",
+    title: "Unsere Küche",
+    description: "Frisch zubereitete italienische Spezialitäten aus unserem Restaurant."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Unser Koch",
-    title: "Meisterhafte Küche",
-    description: "Unsere Köche bereiten jeden Tag frische, authentische italienische Gerichte zu."
+    src: "/gallery/outside.jpeg",
+    alt: "Außenbereich",
+    title: "Außenbereich",
+    description: "Unser schöner Außenbereich für warme Sommerabende."
   },
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/jpeg",
-    alt: "Historisches Team Foto",
-    title: "Tradition seit 2001",
-    description: "Über drei Jahrzehnte italienische Gastlichkeit in Berlin-Lichterfelde."
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "In der Küche",
-    title: "Frisch aus der Küche",
-    description: "Täglich frisch zubereitete Gerichte mit den besten Zutaten aus Italien."
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/.jpeg",
-    alt: "Tagesangebote Tafel",
-    title: "Tagesangebote",
-    description: "Unsere handgeschriebene Tafel zeigt täglich wechselnde Spezialitäten."
+    src: "/gallery/vine.jpeg",
+    alt: "Wein",
+    title: "Wein-Auswahl",
+    description: "Unsere sorgfältig ausgewählte Weinkollektion."
   },
 ]
 
@@ -155,14 +161,14 @@ export default function GalleryPage() {
         </div>
 
         {/* Gallery Grid */}
-        {/* <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {galleryImages.map((image, index) => (
             <button
               key={index}
               onClick={() => openLightbox(index)}
               className="group text-left bg-cream rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
             >
-              Image
+              {/* Image */}
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
                   src={image.src}
@@ -175,7 +181,7 @@ export default function GalleryPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-wine/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
 
-              Info
+              {/* Info */}
               <div className="p-5">
                 <h3 className="font-serif text-xl text-wine group-hover:text-terracotta transition-colors mb-2">
                   {image.title}
@@ -186,7 +192,7 @@ export default function GalleryPage() {
               </div>
             </button>
           ))}
-        </div> */}
+        </div>
       </div>
 
       {/* Lightbox */}
