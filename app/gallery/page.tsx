@@ -3,14 +3,74 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { X, ArrowLeft } from "lucide-react"
+import { X, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react"
 
 const galleryImages = [
   {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/staf2-limnKWwsj5Rv5gckItw0jTdHzoNrTY.jpeg",
-    alt: "Frische Zutaten",
-    title: "Frische Zutaten",
-    description: "Mediterranes Ambiente mit frischen Zitrusfrüchten - ein Stück Italien mitten in Berlin."
+    src: "/gallery/ambient1.jpeg",
+    alt: "Ambiente - Atmosphäre 1",
+    title: "Ambiente",
+    description: "Die einladende Atmosphäre unseres Restaurants."
+  },
+  {
+    src: "/gallery/ambient3.jpeg",
+    alt: "Ambiente - Atmosphäre 2",
+    title: "Gemütliche Ecke",
+    description: "Ein Blick in unsere gemütlichen Ecken."
+  },
+  {
+    src: "/gallery/ambient4.jpeg",
+    alt: "Ambiente - Atmosphäre 3",
+    title: "Tisch-Setting",
+    description: "Liebevoll arrangierte Tische für Ihr Essenserlebnis."
+  },
+  {
+    src: "/gallery/ambient5.jpeg",
+    alt: "Ambiente - Atmosphäre 4",
+    title: "Restaurant Ambiente",
+    description: "Die warme und einladende Atmosphäre von Carpe Diem."
+  },
+  {
+    src: "/gallery/ambient6.jpeg",
+    alt: "Ambiente - Atmosphäre 5",
+    title: "Inneneinrichtung",
+    description: "Details unserer wunderschönen Inneneinrichtung."
+  },
+  {
+    src: "/gallery/ambient7.jpeg",
+    alt: "Ambiente - Atmosphäre 6",
+    title: "Restaurant Details",
+    description: "Die liebevollen Details, die unser Restaurant besonders machen."
+  },
+  {
+    src: "/gallery/carpediem.jpeg",
+    alt: "Carpe Diem",
+    title: "Carpe Diem Restaurant",
+    description: "Unser Restaurant - ein Ort für unvergessliche Momente."
+  },
+  {
+    src: "/gallery/collegue.jpeg",
+    alt: "Kollegen",
+    title: "Unser Team",
+    description: "Unser leidenschaftliches Team, das Ihnen herzlich willkommen heißt."
+  },
+  {
+    src: "/gallery/food.jpeg",
+    alt: "Leckeres Essen",
+    title: "Unsere Küche",
+    description: "Frisch zubereitete italienische Spezialitäten aus unserem Restaurant."
+  },
+  {
+    src: "/gallery/outside.jpeg",
+    alt: "Außenbereich",
+    title: "Außenbereich",
+    description: "Unser schöner Außenbereich für warme Sommerabende."
+  },
+  {
+    src: "/gallery/vine.jpeg",
+    alt: "Wein",
+    title: "Wein-Auswahl",
+    description: "Unsere sorgfältig ausgewählte Weinkollektion."
   },
 ]
 
@@ -20,9 +80,27 @@ export default function GalleryPage() {
   const openLightbox = (index: number) => setSelectedImage(index)
   const closeLightbox = () => setSelectedImage(null)
 
+  const goToPrevious = () => {
+    if (selectedImage !== null) {
+      setSelectedImage(
+        selectedImage === 0 ? galleryImages.length - 1 : selectedImage - 1
+      )
+    }
+  }
+
+  const goToNext = () => {
+    if (selectedImage !== null) {
+      setSelectedImage(
+        selectedImage === galleryImages.length - 1 ? 0 : selectedImage + 1
+      )
+    }
+  }
+
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (selectedImage === null) return
+    if (e.key === 'ArrowLeft') goToPrevious()
+    if (e.key === 'ArrowRight') goToNext()
     if (e.key === 'Escape') closeLightbox()
   }
 
@@ -131,6 +209,31 @@ export default function GalleryPage() {
           >
             <X className="w-8 h-8" />
           </button>
+
+          {/* Previous Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              goToPrevious()
+            }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-cream/80 hover:text-cream p-2 transition-colors z-10"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="w-10 h-10" />
+          </button>
+
+          {/* Next Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              goToNext()
+            }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-cream/80 hover:text-cream p-2 transition-colors z-10"
+            aria-label="Next image"
+          >
+            <ChevronRight className="w-10 h-10" />
+          </button>
+
           {/* Image Container */}
           <div
             className="w-full max-w-5xl"
@@ -146,7 +249,7 @@ export default function GalleryPage() {
                 style={{ position: "absolute" }}
               />
             </div>
-            
+
             {/* Caption */}
             <div className="mt-6 text-center text-cream">
               <h3 className="font-serif text-2xl mb-2">
@@ -154,6 +257,9 @@ export default function GalleryPage() {
               </h3>
               <p className="text-cream/80 max-w-xl mx-auto">
                 {galleryImages[selectedImage].description}
+              </p>
+              <p className="text-sm text-cream/50 mt-4">
+                {selectedImage + 1} / {galleryImages.length}
               </p>
             </div>
           </div>
