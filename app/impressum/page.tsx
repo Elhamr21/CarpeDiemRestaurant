@@ -53,11 +53,19 @@ export default function Impressum() {
 
           <section>
             <h2 className="font-serif text-2xl text-wine mb-4">Betreiber und inhaltlich Verantwortlicher</h2>
-            <p>
-              Carpe Diem<br />
-              Lichterfelder Ring 129<br />
-              12209 Berlin
-            </p>
+            <div className="space-y-2">
+              <p>
+                <strong>Burim Musa</strong>
+              </p>
+              <p>
+                Carpe Diem – Enoteca Ristorante<br />
+                Lichterfelder Ring 129<br />
+                12209 Berlin
+              </p>
+              <p>
+                gemäß § 55 Abs. 2 RStV
+              </p>
+            </div>
           </section>
 
           <section>

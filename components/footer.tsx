@@ -4,7 +4,7 @@ import { MapPin, Phone, Clock } from "lucide-react"
 const navLinks = [
   { href: "#home", label: "Home" },
   { href: "#menu", label: "Speisekarte" },
-  { href: "#team", label: "Unser Team" },
+  { href: "#monatskarte", label: "Monatskarte" },
   { href: "#gallery", label: "Galerie" },
   { href: "#reservation", label: "Kontakt" },
 ]

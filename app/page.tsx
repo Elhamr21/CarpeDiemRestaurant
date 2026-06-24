@@ -3,7 +3,7 @@ import { Navigation } from "@/components/navigation";
 import { Hero } from "@/components/hero";
 import { OurStory } from "@/components/our-story";
 import { MenuSection } from "@/components/menu-section";
-import { TeamSection } from "@/components/team-section";
+import { MonatskartSection } from "@/components/monatskarte-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { GallerySection } from "@/components/gallery-section";
 import { ReservationSection } from "@/components/reservation-section";
@@ -31,14 +31,14 @@ export default function HomePage() {
               Willkommen im Carpe Diem
             </h2>
             <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-              Seit über 30 Jahren bringen wir die authentischen Aromen Italiens
+              Seit über 25 Jahren bringen wir die authentischen Aromen Italiens
               nach Berlin-Lichterfelde. Unsere Küche vereint traditionelle
-              Familienrezepte mit frischen, hochwertigen Zutaten - von der
+              Familienrezepte mit frischen, hochwertigen Zutaten – von der
               hausgemachten Pasta bis zur Pizza aus dem Steinofen.
             </p>
             <div className="flex flex-wrap justify-center gap-8 text-center">
               <div>
-                <p className="font-serif text-4xl text-wine">30+</p>
+                <p className="font-serif text-4xl text-wine">25+</p>
                 <p className="text-sm text-muted-foreground uppercase tracking-wider">
                   Jahre Tradition
                 </p>
@@ -62,8 +62,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      <OurStory />
       <MenuSection />
-      <TeamSection />
+      <MonatskartSection />
       <TestimonialsSection />
       <GallerySection />
       <ReservationSection />

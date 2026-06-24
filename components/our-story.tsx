@@ -9,39 +9,44 @@ export function OurStory() {
           <div className="space-y-6">
             <div>
               <p className="font-sans text-sm uppercase tracking-[0.3em] text-terracotta mb-4">
-                Our Story
+                La Nostra Storia
               </p>
               <h2 className="font-serif text-4xl md:text-5xl text-wine mb-8 leading-tight">
-                Carpe Diem
+                Unsere Geschichte
               </h2>
             </div>
 
             <div className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                Carpe Diem was founded in 2001 with a simple vision: to bring
-                authentic Italian cuisine to Berlin. What began as a small
-                pizzeria is now a popular meeting place for connoisseurs from
-                all over Berlin and beyond.
+                Das Carpe Diem wurde mit einer einfachen Vision gegründet:
+                authentische italienische Küche nach Berlin-Lichterfelde zu
+                bringen. Was als kleine Pizzeria begann, ist heute ein beliebter
+                Treffpunkt für Genießer aus ganz Berlin und darüber hinaus.
               </p>
 
               <p>
-                An important part of this story is Cesar, who has shaped the
-                heart and soul of our restaurant for many years. With his
-                passion for Italian cuisine and his commitment, he has helped
-                Carpe Diem become what it is today.
+                Ein wichtiger Teil dieser Geschichte ist{" "}
+                <strong className="text-wine font-semibold">
+                  GIUSEPPE BIANCO (PEPE)
+                </strong>
+                , der seit vielen Jahren das Herz und die Seele unseres
+                Restaurants prägt. Mit seiner Leidenschaft für authentische
+                italienische Küche und seinem unermüdlichen Engagement hat er
+                Carpe Diem zu dem gemacht, was es heute ist.
               </p>
 
               <p>
-                Our recipes come from different regions of Italy and are passed
-                down from generation to generation. We attach great importance
-                to fresh, high-quality ingredients and authentic preparation
-                methods.
+                Unsere Rezepte stammen aus den verschiedenen Regionen Italiens
+                und werden von Generation zu Generation weitergegeben. Wir legen
+                größten Wert auf frische, hochwertige Zutaten und authentische
+                Zubereitungsmethoden.
               </p>
 
               <p>
-                The heart of our restaurant is our traditional stone oven, where
-                our pizzas are baked at perfect temperatures. We also serve fine
-                wines from the best growing regions in Italy.
+                Das Herzstück unseres Restaurants ist unser traditioneller
+                Steinofen, in dem unsere Pizzen bei perfekter Temperatur
+                gebacken werden. Dazu servieren wir erlesene Weine aus den
+                besten Anbaugebieten Italiens.
               </p>
             </div>
           </div>
@@ -50,7 +55,7 @@ export function OurStory() {
           <div className="relative w-full aspect-square rounded-lg overflow-hidden shadow-lg">
             <Image
               src="/photos/1000028487.jpg"
-              alt="Carpe Diem Restaurant"
+              alt="Atmosphäre im Carpe Diem Ristorante Berlin-Lichterfelde"
               fill
               className="object-cover"
               priority
