@@ -49,12 +49,6 @@ const galleryImages = [
     description: "Unser Restaurant - ein Ort für unvergessliche Momente."
   },
   {
-    src: "/gallery/collegue.jpeg",
-    alt: "Kollegen",
-    title: "Unser Team",
-    description: "Unser leidenschaftliches Team, das Ihnen herzlich willkommen heißt."
-  },
-  {
     src: "/gallery/food.jpeg",
     alt: "Leckeres Essen",
     title: "Unsere Küche",
