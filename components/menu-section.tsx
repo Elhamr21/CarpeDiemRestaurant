@@ -7,6 +7,7 @@ import { X, ArrowRight } from "lucide-react"
 
 const menuCategories = [
   { id: "starters", label: "Vorspeisen", labelIt: "Antipasti" },
+  { id: "salads", label: "Salate", labelIt: "Insalate" },
   { id: "pizza", label: "Pizza", labelIt: "Pizza" },
   { id: "pasta", label: "Pasta", labelIt: "Primi" },
   { id: "mains", label: "Hauptgerichte", labelIt: "Secondi" },
@@ -66,6 +67,69 @@ const menuData = {
         nameIt: "Antipasto Frutti di Mare",
         price: "18,00",
         description: "Erlesener Meeresfrüchtesalat",
+        image: "https://images.unsplash.com/"
+      },
+    ]
+  },
+  salads: {
+    title: "Salate",
+    titleIt: "Insalate",
+    description: "Frische Salate mit erlesenen italienischen Zutaten",
+    items: [
+      {
+        id: "mista-piccola",
+        name: "Beilagensalat",
+        nameIt: "Mista Piccola",
+        price: "5,50",
+        description: "Beilagensalat",
+        image: "https://images.unsplash.com/"
+      },
+      {
+        id: "insalata-tonno",
+        name: "Thunfischsalat",
+        nameIt: "Insalata di Tonno",
+        price: "12,00",
+        description: "Thunfischsalat",
+        image: "https://images.unsplash.com/"
+      },
+      {
+        id: "insalata-pecorino",
+        name: "Salat mit Pecorino-Käse",
+        nameIt: "Insalata Pecorino",
+        price: "12,00",
+        description: "Salat mit Pecorino-Käse",
+        image: "https://images.unsplash.com/"
+      },
+      {
+        id: "insalata-rucola",
+        name: "Rucola-Salat",
+        nameIt: "Insalata Rucola",
+        price: "12,50",
+        description: "Rucola-Salat mit Cherrytomaten und Parmesan-Käse",
+        image: "https://images.unsplash.com/"
+      },
+      {
+        id: "insalata-tonno-rino",
+        name: "Thunfischsalat mit Schafskäse",
+        nameIt: "Insalata Tonno - rino",
+        price: "13,50",
+        description: "Thunfischsalat mit Schafskäse",
+        image: "https://images.unsplash.com/"
+      },
+      {
+        id: "insalata-primavera",
+        name: "Salat mit Schinken, Artischocken und Schafskäse",
+        nameIt: "Insalata Primavera",
+        price: "13,50",
+        description: "Salat mit gekochtem Schinken, Artischocken und Schafskäse",
+        image: "https://images.unsplash.com/"
+      },
+      {
+        id: "insalata-pollo",
+        name: "Salat mit Hähnchenbruststreifen",
+        nameIt: "Insalata di Pollo",
+        price: "14,50",
+        description: "Salat mit gegrillten Hähnchenbruststreifen",
         image: "https://images.unsplash.com/"
       },
     ]
