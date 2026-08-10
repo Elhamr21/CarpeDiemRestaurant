@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 
 const menuCategories = [
   { id: "starters", label: "Vorspeisen", labelIt: "Antipasti" },
+  { id: "salads", label: "Salate", labelIt: "Insalate" },
   { id: "pizza", label: "Pizza", labelIt: "Pizza" },
   { id: "pasta", label: "Pasta", labelIt: "Primi" },
   { id: "mains", label: "Hauptgerichte", labelIt: "Secondi" },
@@ -28,6 +29,20 @@ const menuData = {
       { id: "caprese", name: "Mozzarella Caprese", price: "13,50", description: "Büffelmozzarella mit Tomatenscheiben und frischem Basilikum" },
       { id: "frutti-di-mare", name: "Antipasto Frutti di Mare", price: "18,00", description: "Erlesener Meeresfrüchtesalat" },
       { id: "caponata", name: "Caponata di Melanzane", price: "11,00", description: "Sizilianisches Auberginengericht in süß-sauer Sauce mit Oliven und Kapern" },
+    ]
+  },
+  salads: {
+    title: "Salate",
+    titleIt: "Insalate",
+    description: "Frische Salate mit erlesenen italienischen Zutaten",
+    items: [
+      { id: "mista-piccola", name: "Mista Piccola", price: "5,50", description: "Beilagensalat" },
+      { id: "insalata-tonno", name: "Insalata di Tonno", price: "12,00", description: "Thunfischsalat" },
+      { id: "insalata-pecorino", name: "Insalata Pecorino", price: "12,00", description: "Salat mit Pecorino-Käse" },
+      { id: "insalata-rucola", name: "Insalata Rucola", price: "12,50", description: "Rucola-Salat mit Cherrytomaten und Parmesan-Käse" },
+      { id: "insalata-tonno-rino", name: "Insalata Tonno - rino", price: "13,50", description: "Thunfischsalat mit Schafskäse" },
+      { id: "insalata-primavera", name: "Insalata Primavera", price: "13,50", description: "Salat mit gekochtem Schinken, Artischocken und Schafskäse" },
+      { id: "insalata-pollo", name: "Insalata di Pollo", price: "14,50", description: "Salat mit gegrillten Hähnchenbruststreifen" },
     ]
   },
   pizza: {
