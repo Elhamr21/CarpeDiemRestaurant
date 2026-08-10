@@ -16,7 +16,7 @@ export function MonatskartSection() {
             Giugno · Juni 2026
           </p>
           <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-wine mb-4 leading-tight">
-            Monatskarte
+            Aktuelle Tageskarte
           </h2>
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="h-px w-16 bg-wine/30" />
