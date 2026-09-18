@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Cormorant_Garamond, Source_Sans_3 } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { GoogleAnalytics } from '@/components/google-analytics'
+import CookieConsent from '@/components/cookie-consent'
 import { RestaurantJsonLd } from '@/components/restaurant-json-ld'
 import { siteConfig } from '@/lib/seo'
 import './globals.css'
@@ -91,6 +92,7 @@ export default function RootLayout({
         <RestaurantJsonLd />
         {children}
         <GoogleAnalytics />
+        <CookieConsent />
         <Analytics />
       </body>
     </html>

@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { MapPin, Phone, Clock } from "lucide-react"
+import { openCookiePreferences } from "@/components/cookie-consent"
 
 const navLinks = [
   { href: "#home", label: "Home" },
@@ -131,6 +132,19 @@ export function Footer() {
         >
           Datenschutz
         </Link>
+        <Link
+          href="/cookies"
+          className="text-cream/50 hover:text-cream/70 text-xs transition-colors"
+        >
+          Cookie-Richtlinie
+        </Link>
+        <button
+          type="button"
+          onClick={openCookiePreferences}
+          className="text-cream/50 hover:text-cream/70 text-xs transition-colors"
+        >
+          Cookie-Einstellungen
+        </button>
       </div>
     </div>
   </div>

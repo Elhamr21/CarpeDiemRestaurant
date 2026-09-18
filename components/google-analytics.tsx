@@ -1,8 +1,9 @@
 "use client"
 
-import { Suspense, useEffect } from "react"
+import { Suspense, useEffect, useState } from "react"
 import Script from "next/script"
 import { usePathname, useSearchParams } from "next/navigation"
+import { hasAnalyticsConsent } from "@/components/cookie-consent"
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID
 
@@ -36,7 +37,16 @@ function GoogleAnalyticsPageView({ measurementId }: { measurementId: string }) {
 }
 
 export function GoogleAnalytics() {
-  if (!GA_ID) {
+  const [consented, setConsented] = useState(false)
+
+  useEffect(() => {
+    setConsented(hasAnalyticsConsent())
+    const handler = () => setConsented(hasAnalyticsConsent())
+    window.addEventListener("cookie-consent-updated", handler)
+    return () => window.removeEventListener("cookie-consent-updated", handler)
+  }, [])
+
+  if (!GA_ID || !consented) {
     return null
   }
 
