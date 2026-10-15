@@ -13,7 +13,7 @@ export function MonatskartSection() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <p className="font-sans text-sm uppercase tracking-[0.3em] text-terracotta mb-3">
-            Giugno · Juni 2026
+            Ottobre · Oktober 2026
           </p>
           <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-wine mb-4 leading-tight">
             Aktuelle Tageskarte
@@ -31,10 +31,10 @@ export function MonatskartSection() {
         {/* Menu Image */}
         <div className="max-w-2xl mx-auto shadow-2xl rounded-sm overflow-hidden border border-wine/10">
           <Image
-            src="/photos/image.png"
-            alt="Monatskarte Pfifferlinge – Carpe Diem"
-            width={950}
-            height={1250}
+            src="/photos/tageskarte-oktober-2026.png"
+            alt="Tageskarte Oktober – Antipasti, Pasta, Fisch, Fleisch und Dessert – Carpe Diem"
+            width={986}
+            height={1280}
             className="w-full h-auto"
             priority
           />
