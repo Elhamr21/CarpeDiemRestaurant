@@ -1,3 +1,4 @@
+import { NewYearMenu } from "@/components/new-year-menu";
 import type { Metadata } from "next";
 import { Navigation } from "@/components/navigation";
 import { Hero } from "@/components/hero";
@@ -62,6 +63,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      <NewYearMenu />
       <OurStory />
       <MenuSection />
       <MonatskartSection />

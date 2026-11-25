@@ -1,3 +1,4 @@
+import { CLOSURE_MESSAGE, isClosedReservationDate } from "@/lib/reservation-dates";
 import { NextRequest, NextResponse } from "next/server";
 import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2";
 import { z } from "zod";
@@ -663,6 +664,11 @@ export async function POST(request: NextRequest): Promise<Response> {
   try {
     const body = await request.json();
     const { type, payload } = emailRequestSchema.parse(body);
+
+    if ("date" in payload && isClosedReservationDate(payload.date) &&
+        !(type === "reservation_confirmation" && payload.status === "cancelled")) {
+      return NextResponse.json({ error: CLOSURE_MESSAGE }, { status: 400 });
+    }
 
     if (type === "reservation_request") {
       const result = await sendReservationRequestEmails(payload);

@@ -12,6 +12,7 @@ import {
   Users,
 } from "lucide-react"
 import { getAmplifyErrorMessage, getDataClient } from "@/lib/amplify"
+import { CLOSURE_MESSAGE, isClosedReservationDate } from "@/lib/reservation-dates"
 import { cn } from "@/lib/utils"
 
 const openingHours = [
@@ -188,6 +189,12 @@ export function ReservationSection() {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => {
+    if (event.target.name === "date" && isClosedReservationDate(event.target.value)) {
+      setSubmitError(CLOSURE_MESSAGE)
+      setFormData((current) => ({ ...current, date: "" }))
+      return
+    }
+    if (event.target.name === "date") setSubmitError("")
     setFormData((currentFormData) => ({
       ...currentFormData,
       [event.target.name]: event.target.value,
@@ -201,6 +208,9 @@ export function ReservationSection() {
     setSubmitWarning("")
 
     try {
+      if (isClosedReservationDate(formData.date.trim())) {
+        throw new Error(CLOSURE_MESSAGE)
+      }
       const client = await getDataClient()
       const normalizedFormData = {
         name: formData.name.trim(),
@@ -341,6 +351,9 @@ export function ReservationSection() {
           </p>
         </div>
 
+        <p id="closure-notice" className="max-w-6xl mx-auto mb-8 rounded-lg border border-terracotta/40 bg-parchment p-4 text-wine">
+          {CLOSURE_MESSAGE}
+        </p>
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           <div
             className={cn(
@@ -548,6 +561,7 @@ export function ReservationSection() {
                       </label>
                       <input
                         type="date"
+                        aria-describedby="closure-notice"
                         id="date"
                         name="date"
                         required
