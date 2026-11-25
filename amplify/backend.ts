@@ -4,7 +4,7 @@ import { data } from './data/resource';
 import { storage } from './storage/resource';
 import { PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam';
 import { CfnFunctionConfiguration } from 'aws-cdk-lib/aws-appsync';
-import { CLOSED_RESERVATION_DATES, CLOSURE_MESSAGE } from '../lib/reservation-dates';
+import { CLOSED_RESERVATION_DATES, CLOSURE_MESSAGE } from './reservation-dates';
 import { Stack } from 'aws-cdk-lib';
 
 const backend = defineBackend({

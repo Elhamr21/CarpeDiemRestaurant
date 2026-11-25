@@ -1,5 +1,6 @@
 "use client"
 
+import { NewYearMenu } from "@/components/new-year-menu"
 import { useState } from "react"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
@@ -205,6 +206,8 @@ export default function MenuPage() {
           </div>
         </div>
       </header>
+
+      <NewYearMenu />
 
       {/* Page Content */}
       <div className="container mx-auto px-4 py-12">
