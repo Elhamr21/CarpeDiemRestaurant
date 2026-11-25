@@ -6,6 +6,8 @@ backend:
         - corepack enable
         - pnpm config set store-dir .pnpm-store
         - pnpm install --frozen-lockfile --prefer-offline
+        # CDK requires one lockfile; this project builds with pnpm.
+        - rm -f package-lock.json
         - |
           if pnpm exec node ./node_modules/@aws-amplify/backend-cli/lib/ampx.js pipeline-deploy \
             --branch "${AWS_BRANCH}" \
